@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		250E4020E494ED0D471AB61E /* libPods-BrowserMultiWindow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D132E3BCD42C15C52D90BE3 /* libPods-BrowserMultiWindow.a */; };
+		2D1BAC491F90C03D0030C9AF /* SWMultiWindowsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D1BAC481F90C03D0030C9AF /* SWMultiWindowsController.m */; };
 		2D7E8A8E1F8F400A00070A09 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8A8D1F8F400A00070A09 /* AppDelegate.m */; };
 		2D7E8A941F8F400A00070A09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D7E8A921F8F400A00070A09 /* Main.storyboard */; };
 		2D7E8A961F8F400A00070A09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D7E8A951F8F400A00070A09 /* Assets.xcassets */; };
@@ -40,6 +41,8 @@
 
 /* Begin PBXFileReference section */
 		259A050EF8A5F613E9FAFF78 /* Pods-BrowserMultiWindow.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrowserMultiWindow.release.xcconfig"; path = "Pods/Target Support Files/Pods-BrowserMultiWindow/Pods-BrowserMultiWindow.release.xcconfig"; sourceTree = "<group>"; };
+		2D1BAC471F90C03D0030C9AF /* SWMultiWindowsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWMultiWindowsController.h; sourceTree = "<group>"; };
+		2D1BAC481F90C03D0030C9AF /* SWMultiWindowsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWMultiWindowsController.m; sourceTree = "<group>"; };
 		2D7E8A891F8F400A00070A09 /* BrowserMultiWindow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrowserMultiWindow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D7E8A8C1F8F400A00070A09 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2D7E8A8D1F8F400A00070A09 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -191,6 +194,8 @@
 				2D7E8ADC1F9092BB00070A09 /* PTHtmlViewController.m */,
 				2D7E8ACC1F8F47EE00070A09 /* SWRootViewController.h */,
 				2D7E8ACD1F8F47EE00070A09 /* SWRootViewController.m */,
+				2D1BAC471F90C03D0030C9AF /* SWMultiWindowsController.h */,
+				2D1BAC481F90C03D0030C9AF /* SWMultiWindowsController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -417,6 +422,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D1BAC491F90C03D0030C9AF /* SWMultiWindowsController.m in Sources */,
 				2D7E8A9C1F8F400A00070A09 /* main.m in Sources */,
 				2D7E8AD11F8F487100070A09 /* SWOprateView.m in Sources */,
 				2D7E8ADD1F9092BB00070A09 /* PTHtmlViewController.m in Sources */,

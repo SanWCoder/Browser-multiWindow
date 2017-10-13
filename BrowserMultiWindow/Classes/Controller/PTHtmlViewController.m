@@ -90,8 +90,8 @@
  * 点击手势操作方法
  */
 - (void)tagGes{
-    //    self.webView.frame = CGRectMake(0, kNavHeight, self.view.frame.size.width, self.view.frame.size.height - kNavHeight - kNomalHeight);
-    //    self.webView.userInteractionEnabled = YES;
+    // self.webView.frame = CGRectMake(0, kNavHeight, self.view.frame.size.width, self.view.frame.size.height - kNavHeight - kNomalHeight);
+    // self.webView.userInteractionEnabled = YES;
 }
 // 允许多个手势并发
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
