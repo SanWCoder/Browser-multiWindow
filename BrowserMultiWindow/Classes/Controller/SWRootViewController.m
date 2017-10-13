@@ -35,7 +35,7 @@
     if (!_homeData) {
         _homeData = [[NSMutableArray alloc]init];
         for (int i = 0; i < 20; i ++) {
-            [_homeData addObject:@"测试数据"];
+            [_homeData addObject:[NSString stringWithFormat:@"测试数据--%d",i]];
         }
     }
     return _homeData;
@@ -66,13 +66,18 @@
         btn.frame = CGRectMake(width * i,kNavHeight, width, height * 2);
         [self.view addSubview:btn];
     }
-    UITableView * tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kNavHeight + height * 2, KWidth, KHeight - (kNavHeight + height * 2) - kNomalHeight) style:UITableViewStyleGrouped];
+    UITableView * tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kNavHeight + height * 2, KWidth, KHeight - (kNavHeight + height * 2) - kNomalHeight) style:UITableViewStylePlain]; // UITableViewStyleGrouped会在头上部添加空白大体30左右
     self.tableView = tableView;
     tableView.delegate = self;
     tableView.dataSource = self;
 //    tableView.backgroundColor = kBacColor;
     [self.view addSubview:tableView];
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if (@available(iOS 11.0, *)) {
+        tableView.contentInsetAdjustmentBehavior = NO;
+    } else {
+        // Fallback on earlier versions
+    }
     tableView.showsVerticalScrollIndicator = NO;
     
     SWOprateView *oprateView = [[SWOprateView alloc]initWithFrame:CGRectMake(0, KHeight - kNomalHeight, KWidth, kNomalHeight)];
@@ -89,14 +94,6 @@
 - (void)btnClick:(UIButton *)sender{
     
 }
-/**
- * 点击手势操作方法
- */
-- (void)tagGes{
-//    self.webView.frame = CGRectMake(0, kNavHeight, self.view.frame.size.width, self.view.frame.size.height - kNavHeight - kNomalHeight);
-//    self.webView.userInteractionEnabled = YES;
-}
-
 /**
  * 按钮的操作
  @param sender <#sender description#>
@@ -127,27 +124,8 @@
             break;
     }
 }
-// 允许多个手势并发
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
-        PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
-        html.str = request.URL.absoluteString;
-        [self.navigationController pushViewController:html animated:YES];
-    }
-    return YES;
-}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.homeData.count;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return  0.001;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 0.001;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
@@ -155,6 +133,16 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     }
     cell.textLabel.text = self.homeData[indexPath.row];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 50;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
+    html.str = @"http://www.hunliji.com/";
+    [self.navigationController pushViewController:html animated:YES];
 }
 @end

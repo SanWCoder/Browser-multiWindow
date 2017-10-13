@@ -77,4 +77,25 @@
         _remidView.hidden = YES;
     }
 }
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
+        html.str = request.URL.absoluteString;
+        [self.navigationController pushViewController:html animated:YES];
+    }
+    return YES;
+}
+/**
+ * 点击手势操作方法
+ */
+- (void)tagGes{
+    //    self.webView.frame = CGRectMake(0, kNavHeight, self.view.frame.size.width, self.view.frame.size.height - kNavHeight - kNomalHeight);
+    //    self.webView.userInteractionEnabled = YES;
+}
+// 允许多个手势并发
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
 @end

@@ -17,7 +17,6 @@
 		2D7E8AB11F8F400A00070A09 /* BrowserMultiWindowUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8AB01F8F400A00070A09 /* BrowserMultiWindowUITests.m */; };
 		2D7E8ACE1F8F47EE00070A09 /* SWRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8ACD1F8F47EE00070A09 /* SWRootViewController.m */; };
 		2D7E8AD11F8F487100070A09 /* SWOprateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8AD01F8F487100070A09 /* SWOprateView.m */; };
-		2D7E8AD51F9061FB00070A09 /* SWConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8AD41F9061FB00070A09 /* SWConst.m */; };
 		2D7E8ADD1F9092BB00070A09 /* PTHtmlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8ADC1F9092BB00070A09 /* PTHtmlViewController.m */; };
 		2D7E8AE01F9092E000070A09 /* PTRemindView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8ADF1F9092DF00070A09 /* PTRemindView.m */; };
 /* End PBXBuildFile section */
@@ -59,8 +58,6 @@
 		2D7E8ACD1F8F47EE00070A09 /* SWRootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWRootViewController.m; sourceTree = "<group>"; };
 		2D7E8ACF1F8F487100070A09 /* SWOprateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWOprateView.h; sourceTree = "<group>"; };
 		2D7E8AD01F8F487100070A09 /* SWOprateView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWOprateView.m; sourceTree = "<group>"; };
-		2D7E8AD31F9061FB00070A09 /* SWConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWConst.h; sourceTree = "<group>"; };
-		2D7E8AD41F9061FB00070A09 /* SWConst.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWConst.m; sourceTree = "<group>"; };
 		2D7E8ADA1F908F1500070A09 /* SWConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWConfig.h; sourceTree = "<group>"; };
 		2D7E8ADB1F9092BA00070A09 /* PTHtmlViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTHtmlViewController.h; sourceTree = "<group>"; };
 		2D7E8ADC1F9092BB00070A09 /* PTHtmlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTHtmlViewController.m; sourceTree = "<group>"; };
@@ -219,8 +216,6 @@
 		2D7E8ACB1F8F474E00070A09 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				2D7E8AD31F9061FB00070A09 /* SWConst.h */,
-				2D7E8AD41F9061FB00070A09 /* SWConst.m */,
 				2D7E8ADA1F908F1500070A09 /* SWConfig.h */,
 			);
 			path = Model;
@@ -422,7 +417,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D7E8AD51F9061FB00070A09 /* SWConst.m in Sources */,
 				2D7E8A9C1F8F400A00070A09 /* main.m in Sources */,
 				2D7E8AD11F8F487100070A09 /* SWOprateView.m in Sources */,
 				2D7E8ADD1F9092BB00070A09 /* PTHtmlViewController.m in Sources */,
@@ -595,7 +589,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VGY8K73G67;
 				INFOPLIST_FILE = BrowserMultiWindow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = news.onon.BrowserMultiWindow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -611,7 +605,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VGY8K73G67;
 				INFOPLIST_FILE = BrowserMultiWindow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = news.onon.BrowserMultiWindow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
