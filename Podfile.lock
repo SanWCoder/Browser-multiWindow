@@ -1,0 +1,15 @@
+PODS:
+  - iCarousel (1.8.3)
+  - SDAutoLayout (2.2.0)
+
+DEPENDENCIES:
+  - iCarousel (~> 1.8.3)
+  - SDAutoLayout (~> 2.2.0)
+
+SPEC CHECKSUMS:
+  iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
+  SDAutoLayout: c5509e77ae75735d9a39f7bc83dba6d3f75d49d8
+
+PODFILE CHECKSUM: 5034a6457a5668c35ae5d9a1758f02deea4afc9b
+
+COCOAPODS: 1.4.0.beta.1
