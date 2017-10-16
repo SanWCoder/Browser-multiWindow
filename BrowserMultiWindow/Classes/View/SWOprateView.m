@@ -14,22 +14,32 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self createSubView];
+        
         self.backgroundColor = [UIColor grayColor];
     }
     return self;
 }
+- (void)setDataArray:(NSArray *)dataArray{
+    _dataArray = dataArray;
+    [self createSubView];
+}
 - (void)createSubView{
-    NSArray *image = @[@"top",@"down",@"more",@"windows",@"homePage"];
-    CGFloat width = self.frame.size.width / image.count;
-    for (int i = 0; i < image.count ; i ++) {
+    for (int i = 0; i < self.dataArray.count ; i ++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn setImage:[UIImage imageNamed:image[i]] forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed:self.dataArray[i]] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
         btn.tag = i + 1;
-        btn.frame = CGRectMake(width * i, 0, width, self.frame.size.height);
         [self addSubview:btn];
+    }
+}
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGFloat width = self.frame.size.width / self.subviews.count;
+    
+    for (int i = 0; i < self.subviews.count ; i ++) {
+      self.subviews[i].frame = CGRectMake(width * i, 0, width, self.frame.size.height);
     }
 }
 - (void)btnClick:(UIButton *)sender{

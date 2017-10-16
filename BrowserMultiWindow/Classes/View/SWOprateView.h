@@ -11,5 +11,6 @@
 @interface SWOprateView : UIView
 
 @property (nonatomic,copy) void(^OprateBlock)(UIButton *sender);
-
+/// 创建数据
+@property (nonatomic,strong) NSArray *dataArray;
 @end

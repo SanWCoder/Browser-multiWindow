@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "SWConfig.h"
 #import "PTHtmlViewController.h"
+#import "SWMultiWindowsController.h"
 @interface SWRootViewController ()<UIGestureRecognizerDelegate,UIWebViewDelegate,UINavigationControllerDelegate,UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic,weak) UIWebView *webView;
@@ -81,6 +82,8 @@
     tableView.showsVerticalScrollIndicator = NO;
     
     SWOprateView *oprateView = [[SWOprateView alloc]initWithFrame:CGRectMake(0, KHeight - kNomalHeight, KWidth, kNomalHeight)];
+    
+    oprateView.dataArray = @[@"top",@"down",@"more",@"windows",@"homePage"];
     oprateView.OprateBlock = ^(UIButton *sender) {
         kWeakSelf(weakSelf)
         [weakSelf oprateClick:sender];
@@ -112,9 +115,9 @@
         case 4:
         {
             AppDelegate *deleg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [UIApplication sharedApplication].keyWindow.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
-            [deleg.multiWindows addObject:[[UINavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]]];
-            NSLog(@"=== %@",deleg.multiWindows);
+            [deleg.multiWindows addObject:[UIApplication sharedApplication].keyWindow.rootViewController];
+            SWMultiWindowsController *vc = [[SWMultiWindowsController alloc]init];
+            [UIApplication sharedApplication].keyWindow.rootViewController = vc;
         }
             break;
         case 5:
@@ -142,7 +145,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
-    html.str = @"http://www.hunliji.com/";
+   // html.str = @"http://www.hunliji.com/";
+    html.str = @"https://www.baidu.com/";
     [self.navigationController pushViewController:html animated:YES];
 }
 @end

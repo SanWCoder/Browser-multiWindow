@@ -9,6 +9,9 @@
 #import "PTHtmlViewController.h"
 #import "PTRemindView.h"
 #import "SWConfig.h"
+#import "SWOprateView.h"
+#import "AppDelegate.h"
+#import "SWMultiWindowsController.h"
 @interface PTHtmlViewController ()<UIWebViewDelegate>
 
 @property(nonatomic,strong)UIWebView * webView;
@@ -19,10 +22,18 @@
 
 @implementation PTHtmlViewController
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBarHidden = NO;
+}
 - (UIWebView *)webView
 {
     if (!_webView) {
-        _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, kNavHeight, KWidth, KHeight - kNavHeight)];
+        _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, KWidth, KHeight  - kNomalHeight)];
         
         _webView.delegate = self;
         _webView.dataDetectorTypes = UIDataDetectorTypeAll;
@@ -33,7 +44,7 @@
 {
     kWeakSelf(weakSelf);
     if (!_remidView) {
-        PTRemindView *remidView = [[PTRemindView alloc]initWithFrame:CGRectMake(0,kNavHeight, self.view.frame.size.width, self.view.frame.size.height - kNavHeight)];
+        PTRemindView *remidView = [[PTRemindView alloc]initWithFrame:CGRectMake(0,0, KWidth, KHeight)];
         self.remidView = remidView;
         [self.view addSubview:remidView];
         
@@ -65,9 +76,55 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     // 3. 发送请求给服务器
     [self.webView loadRequest:request];
+//    self.webView.canGoBack = YES;
+//    self.webView.canGoForward = YES;
     [self.view addSubview:self.webView];
+    
+    SWOprateView *oprateView = [[SWOprateView alloc]initWithFrame:CGRectMake(0, KHeight - kNomalHeight, KWidth, kNomalHeight)];
+    oprateView.dataArray = @[@"top",@"down",@"more",@"windows",@"homePage"];
+    oprateView.OprateBlock = ^(UIButton *sender) {
+        kWeakSelf(weakSelf)
+        [weakSelf oprateClick:sender];
+    };
+    [self.view addSubview:oprateView];
 }
-
+/**
+ * 按钮的操作
+ @param sender <#sender description#>
+ */
+- (void)oprateClick:(UIButton *)sender{
+    switch (sender.tag) {
+        case 1:
+            if (self.webView.canGoBack) {
+                [self.webView goBack];
+            }
+            else{
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            }
+            break;
+        case 2:
+            if (self.webView.canGoForward) {
+                [self.webView goForward];
+            }
+            break;
+        case 3:
+            
+            break;
+        case 4:
+        {
+            AppDelegate *deleg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [deleg.multiWindows addObject:[UIApplication sharedApplication].keyWindow.rootViewController];
+            SWMultiWindowsController *vc = [[SWMultiWindowsController alloc]init];
+            [UIApplication sharedApplication].keyWindow.rootViewController = vc;
+        }
+            break;
+        case 5:
+            [self.navigationController popToRootViewControllerAnimated:YES];
+            break;
+        default:
+            break;
+    }
+}
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     self.remidView.hidden = NO;
@@ -80,9 +137,9 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
-        PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
-        html.str = request.URL.absoluteString;
-        [self.navigationController pushViewController:html animated:YES];
+//        PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
+//        html.str = request.URL.absoluteString;
+//        [self.navigationController pushViewController:html animated:YES];
     }
     return YES;
 }
