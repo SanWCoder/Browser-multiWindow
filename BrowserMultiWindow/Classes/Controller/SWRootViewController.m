@@ -114,10 +114,8 @@
             break;
         case 4:
         {
-            AppDelegate *deleg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [deleg.multiWindows addObject:[UIApplication sharedApplication].keyWindow.rootViewController];
             SWMultiWindowsController *vc = [[SWMultiWindowsController alloc]init];
-            [UIApplication sharedApplication].keyWindow.rootViewController = vc;
+            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         case 5:

@@ -19,7 +19,6 @@
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
-    self.multiWindows = [[NSMutableArray alloc]initWithArray:@[self.window.rootViewController]];
     [self.window makeKeyAndVisible];
     return YES;
 }

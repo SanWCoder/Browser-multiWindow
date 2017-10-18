@@ -11,8 +11,6 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-/// 存储所有的RootViewController
-@property (strong, nonatomic) NSMutableArray *multiWindows;
 
 @end
 

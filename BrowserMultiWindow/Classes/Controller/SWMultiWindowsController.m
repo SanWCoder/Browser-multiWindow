@@ -8,23 +8,34 @@
 
 #import "SWMultiWindowsController.h"
 #import "SWConfig.h"
-#import "AppDelegate.h"
 #import "SWOprateView.h"
 #import "SWRootViewController.h"
+#import <UIKit/UIWindow.h>
 @interface SWMultiWindowsController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>
 /// 数据源
 @property (nonatomic,strong) NSMutableArray *baseProductsData;
 /// collectView
 @property (nonatomic,weak) UICollectionView *collectView;
+/// 如果需要创建新窗口，新window须做为当前控制器的属性或者成员变量时才能显示
+@property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) UIWindow *nextWindow;
 @end
 
 @implementation SWMultiWindowsController
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBarHidden = NO;
+}
 - (NSMutableArray *)baseProductsData
 {
     if (!_baseProductsData) {
         _baseProductsData = [[NSMutableArray alloc]init];
-        for (int i = 0; i < 20; i ++) {
-            [_baseProductsData addObject:[NSString stringWithFormat:@"测试数据--%d",i]];
+        for (int i = 0; i < 10; i ++) {
+            [_baseProductsData addObject:[NSString stringWithFormat:@"测试数据----%d",i]];
         }
     }
     return _baseProductsData;
@@ -46,9 +57,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.collectView.backgroundColor = [UIColor whiteColor];
+    self.collectView.backgroundColor = [UIColor grayColor];
+    self.view.backgroundColor = [UIColor grayColor];
     SWOprateView *oprateView = [[SWOprateView alloc]initWithFrame:CGRectMake(0, KHeight - kNomalHeight, KWidth, kNomalHeight)];
-    oprateView.dataArray = @[@"return",@"return"];
+    oprateView.dataArray = @[@"add",@"return"];
     oprateView.OprateBlock = ^(UIButton *sender) {
         kWeakSelf(weakSelf)
         [weakSelf oprateClick:sender];
@@ -62,11 +74,21 @@
 - (void)oprateClick:(UIButton *)sender{
     switch (sender.tag) {
         case 1:
-            [UIApplication sharedApplication].keyWindow.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+            if (self.window) {
+                [self.window removeFromSuperview];
+            }
+            self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+            self.window.backgroundColor = [UIColor redColor];
+            self.window.windowLevel = UIWindowLevelStatusBar;
+            self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
+            [self.window makeKeyAndVisible];
+        }
             break;
         case 2:
         {
-
+            [self.navigationController popViewControllerAnimated:YES];
         }
             break;
         default:
@@ -75,7 +97,7 @@
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-
+    
     return self.baseProductsData.count;
 }
 
@@ -88,7 +110,6 @@
 {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     UILabel *lab = [[UILabel alloc]init];
-    
     int R = (arc4random() % 256) ;
     int G = (arc4random() % 256) ;
     int B = (arc4random() % 256) ;
@@ -100,7 +121,29 @@
 }
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    AppDelegate *deleg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [UIApplication sharedApplication].keyWindow.rootViewController = deleg.multiWindows.firstObject;
+    [self.navigationController popViewControllerAnimated:YES];
+    //    for (UIWindow *windwow in [UIApplication sharedApplication].windows) {
+    //        if (windwow.class == [UIWindow class] ) {
+    //            UINavigationController *nav = (UINavigationController *)windwow.rootViewController;
+    //            NSLog(@"111 === windwow == %@,rootVc == %@,title == %@",windwow,windwow.rootViewController,nav.visibleViewController.title);
+    //        }
+    //    }
+    if (indexPath.item < [UIApplication sharedApplication].windows.count) {
+        NSLog(@"item == %ld",(long)indexPath.item);
+        
+        self.nextWindow = [UIApplication sharedApplication].windows[indexPath.item];
+        UINavigationController *nav = (UINavigationController *)self.nextWindow.rootViewController;
+        
+        if (self.nextWindow && self.nextWindow.class == [UIWindow class]) {
+            [self.nextWindow makeKeyAndVisible];
+            NSLog(@"111 === windwow == %@,rootVc == %@,title == %@",self.nextWindow,self.nextWindow.rootViewController,nav.visibleViewController);
+        }
+    }
+    //    for (UIWindow *windwow in [UIApplication sharedApplication].windows) {
+    //        if (windwow.class == [UIWindow class] ) {
+    //            UINavigationController *nav = (UINavigationController *)windwow.rootViewController;
+    //            NSLog(@"111 === windwow == %@,rootVc == %@,nav.root == %@",windwow,windwow.rootViewController,nav.visibleViewController);
+    //        }
+    //    }
 }
 @end

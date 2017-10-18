@@ -34,7 +34,6 @@
 {
     if (!_webView) {
         _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, KWidth, KHeight  - kNomalHeight)];
-        
         _webView.delegate = self;
         _webView.dataDetectorTypes = UIDataDetectorTypeAll;
     }
@@ -76,8 +75,6 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     // 3. 发送请求给服务器
     [self.webView loadRequest:request];
-//    self.webView.canGoBack = YES;
-//    self.webView.canGoForward = YES;
     [self.view addSubview:self.webView];
     
     SWOprateView *oprateView = [[SWOprateView alloc]initWithFrame:CGRectMake(0, KHeight - kNomalHeight, KWidth, kNomalHeight)];
@@ -102,6 +99,7 @@
                 [self.navigationController popToRootViewControllerAnimated:YES];
             }
             break;
+
         case 2:
             if (self.webView.canGoForward) {
                 [self.webView goForward];
@@ -112,10 +110,8 @@
             break;
         case 4:
         {
-            AppDelegate *deleg = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [deleg.multiWindows addObject:[UIApplication sharedApplication].keyWindow.rootViewController];
             SWMultiWindowsController *vc = [[SWMultiWindowsController alloc]init];
-            [UIApplication sharedApplication].keyWindow.rootViewController = vc;
+            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         case 5:
