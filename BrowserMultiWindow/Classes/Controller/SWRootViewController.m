@@ -26,6 +26,11 @@
 @end
 
 @implementation SWRootViewController
+{
+    UIButton *_button;
+    /// 如果需要创建新窗口，新window须做为当前控制器的属性或者成员变量时才能显示
+    UIWindow *_window;
+}
 /**
  *  懒加载数据源
  *
@@ -89,6 +94,22 @@
         [weakSelf oprateClick:sender];
     };
     [self.view addSubview:oprateView];
+//    [self createSuspendButton];
+}
+- (void)createSuspendButton
+{
+    _button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_button setTitle:@"悬浮按钮" forState:UIControlStateNormal];
+    _button.frame = CGRectMake(0, 0, 80, 80);
+    [_button addTarget:self action:@selector(closeWindow) forControlEvents:UIControlEventTouchUpInside];
+    
+    _window = [[UIWindow alloc]initWithFrame:CGRectMake(100, 200, 80, 80)];
+    _window.windowLevel = UIWindowLevelAlert + 1;
+    _window.backgroundColor = [UIColor redColor];
+    _window.layer.cornerRadius = 40;
+    _window.layer.masksToBounds = YES;
+    [_window addSubview:_button];
+    [_window makeKeyAndVisible];//关键语句,显示window
 }
 /**
  * 按钮的点击方法

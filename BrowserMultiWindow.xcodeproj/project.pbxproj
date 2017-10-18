@@ -10,6 +10,7 @@
 		250E4020E494ED0D471AB61E /* libPods-BrowserMultiWindow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D132E3BCD42C15C52D90BE3 /* libPods-BrowserMultiWindow.a */; };
 		2D1BAC491F90C03D0030C9AF /* SWMultiWindowsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D1BAC481F90C03D0030C9AF /* SWMultiWindowsController.m */; };
 		2D3A1B971F959BD200C36614 /* SWMultiWindowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3A1B961F959BD200C36614 /* SWMultiWindowCell.m */; };
+		2D4E22341F973220007B27C9 /* SWMultiWindowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E22331F973220007B27C9 /* SWMultiWindowModel.m */; };
 		2D7E8A8E1F8F400A00070A09 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8A8D1F8F400A00070A09 /* AppDelegate.m */; };
 		2D7E8A941F8F400A00070A09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D7E8A921F8F400A00070A09 /* Main.storyboard */; };
 		2D7E8A961F8F400A00070A09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D7E8A951F8F400A00070A09 /* Assets.xcassets */; };
@@ -46,6 +47,8 @@
 		2D1BAC481F90C03D0030C9AF /* SWMultiWindowsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWMultiWindowsController.m; sourceTree = "<group>"; };
 		2D3A1B951F959BD200C36614 /* SWMultiWindowCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWMultiWindowCell.h; sourceTree = "<group>"; };
 		2D3A1B961F959BD200C36614 /* SWMultiWindowCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWMultiWindowCell.m; sourceTree = "<group>"; };
+		2D4E22321F973220007B27C9 /* SWMultiWindowModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWMultiWindowModel.h; sourceTree = "<group>"; };
+		2D4E22331F973220007B27C9 /* SWMultiWindowModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWMultiWindowModel.m; sourceTree = "<group>"; };
 		2D7E8A891F8F400A00070A09 /* BrowserMultiWindow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrowserMultiWindow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D7E8A8C1F8F400A00070A09 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2D7E8A8D1F8F400A00070A09 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -227,6 +230,8 @@
 			isa = PBXGroup;
 			children = (
 				2D7E8ADA1F908F1500070A09 /* SWConfig.h */,
+				2D4E22321F973220007B27C9 /* SWMultiWindowModel.h */,
+				2D4E22331F973220007B27C9 /* SWMultiWindowModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -434,6 +439,7 @@
 				2D7E8ADD1F9092BB00070A09 /* PTHtmlViewController.m in Sources */,
 				2D7E8A8E1F8F400A00070A09 /* AppDelegate.m in Sources */,
 				2D7E8ACE1F8F47EE00070A09 /* SWRootViewController.m in Sources */,
+				2D4E22341F973220007B27C9 /* SWMultiWindowModel.m in Sources */,
 				2D7E8AE01F9092E000070A09 /* PTRemindView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
