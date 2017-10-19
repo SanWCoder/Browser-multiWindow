@@ -11,6 +11,7 @@
 #import "SWOprateView.h"
 #import "SWRootViewController.h"
 #import "SWMultiWindowCell.h"
+#import "SWMultiWindowFlowlayout.h"
 @interface SWMultiWindowsController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>
 /// 数据源
 @property (nonatomic,strong) NSMutableArray *baseProductsData;
@@ -46,7 +47,7 @@
             for (UIWindow *windwow in [UIApplication sharedApplication].windows) {
                 if (windwow && windwow.class == [UIWindow class]) {
                     UINavigationController *nav = (UINavigationController *)windwow.rootViewController;
-                    SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self convertViewToImage:nav.visibleViewController.view] window:windwow];
+                    SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self convertViewToImage:windwow.isKeyWindow ? nav.viewControllers[1].view : nav.visibleViewController.view] window:windwow];
                     [_baseProductsData addObject:multiWindow];
                 }
 //                else{
@@ -61,7 +62,8 @@
 }
 - (UICollectionView *)collectView{
     if (!_collectView) {
-        UICollectionViewFlowLayout *flowOut = [[UICollectionViewFlowLayout alloc]init];
+        SWMultiWindowFlowlayout *flowOut = [[SWMultiWindowFlowlayout alloc]init];
+        flowOut.multiWindowCount = self.baseProductsData.count;
         UICollectionView *collectView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, KWidth, KHeight - kNomalHeight) collectionViewLayout:flowOut];
         collectView.alwaysBounceVertical = YES;
         _collectView = collectView;
@@ -98,6 +100,7 @@
             if (self.window) {
                 [self.window removeFromSuperview];
             }
+            [[UIApplication sharedApplication].keyWindow resignKeyWindow];
             self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
             self.window.backgroundColor = [UIColor redColor];
             self.window.windowLevel = UIWindowLevelStatusBar;

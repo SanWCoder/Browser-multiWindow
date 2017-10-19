@@ -24,11 +24,10 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = YES;
-}
+    [self.navigationController setNavigationBarHidden:YES animated:animated];}
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    self.navigationController.navigationBarHidden = NO;
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 - (UIWebView *)webView
 {
@@ -36,6 +35,12 @@
         _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, KWidth, KHeight  - kNomalHeight)];
         _webView.delegate = self;
         _webView.dataDetectorTypes = UIDataDetectorTypeAll;
+        // iOS 11以后，设置不自动偏移使用（self.automaticallyAdjustsScrollViewInsets = NO;）
+        if (@available(iOS 11.0, *)) {
+            _webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            // Fallback on earlier versions
+        }
     }
     return _webView;
 }
@@ -62,8 +67,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    // iOS 11以后，设置不自动偏移使用（scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever）
+    if (@available(*,iOS 11.0)) {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
     // 1. URL 定位资源,需要资源的地址
     // NSString * str = @"http://static.16qs.com/app/pages/wailing-wall.html";
     NSString *urlStr = self.str;
@@ -123,12 +130,12 @@
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    self.remidView.hidden = NO;
+// self.remidView.hidden = NO;
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
-    if (_remidView) {
-        _remidView.hidden = YES;
-    }
+//    if (_remidView) {
+//        _remidView.hidden = YES;
+//    }
 }
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {

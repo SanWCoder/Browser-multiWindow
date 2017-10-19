@@ -82,5 +82,8 @@
     .rightSpaceToView(self, 0)
     .leftSpaceToView(self, 0)
     .bottomSpaceToView(self, 0);
+    
+    self.layer.cornerRadius = 6;
+    self.layer.masksToBounds = YES;
 }
 @end
