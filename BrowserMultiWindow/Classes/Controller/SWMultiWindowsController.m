@@ -44,19 +44,21 @@
 {
     if (!_baseProductsData) {
         _baseProductsData = [[NSMutableArray alloc]init];
-            for (UIWindow *windwow in [UIApplication sharedApplication].windows) {
-                if (windwow && windwow.class == [UIWindow class]) {
-                    UINavigationController *nav = (UINavigationController *)windwow.rootViewController;
-                    SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self convertViewToImage:windwow.isKeyWindow ? nav.viewControllers[1].view : nav.visibleViewController.view] window:windwow];
-                    [_baseProductsData addObject:multiWindow];
-                }
-//                else{
-//                    [windwow removeFromSuperview];
-//                }
+        for (UIWindow *windwow in [UIApplication sharedApplication].windows) {
+            if (windwow && windwow.class == [UIWindow class]) {
+                UINavigationController *nav = (UINavigationController *)windwow.rootViewController;
+                NSLog(@"加载---window === %@,isKey == %d,nav == %@,visibale == %@,top == %@",windwow,windwow.isKeyWindow,nav,nav.visibleViewController,nav.topViewController);
+//                .isKeyWindow ? nav.viewControllers[1].view : nav.visibleViewController ? nav.visibleViewController.view : nav.topViewController.view
+                SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self convertViewToImage:windwow] window:windwow];
+                [_baseProductsData addObject:multiWindow];
             }
-//        for (int i = 0; i < 10; i ++) {
-//            [_baseProductsData addObject:[NSString stringWithFormat:@"测试数据----%d",i]];
-//        }
+            //                else{
+            //                    [windwow removeFromSuperview];
+            //                }
+        }
+        //        for (int i = 0; i < 10; i ++) {
+        //            [_baseProductsData addObject:[NSString stringWithFormat:@"测试数据----%d",i]];
+        //        }
     }
     return _baseProductsData;
 }
@@ -130,42 +132,48 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SWMultiWindowCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SWMultiWindowCell class]) forIndexPath:indexPath];
+    SWMultiWindowCell *cell = [SWMultiWindowCell cellWithCollectionView:collectionView indexPath:indexPath];
     cell.multiWindow = _baseProductsData[indexPath.item];
     
-//    UIImage *window = _baseProductsData[indexPath.item];
-//    UIImageView *image = [[UIImageView alloc]initWithImage:((NSDictionary *)_baseProductsData[indexPath.item])[@"image"]];
-//    image.frame = CGRectMake(0, 0, KWidth - 20, KHeight - 100);
-//    [cell.contentView addSubview:image];
-//    UILabel *lab = [[UILabel alloc]init];
-//    int R = (arc4random() % 256) ;
-//    int G = (arc4random() % 256) ;
-//    int B = (arc4random() % 256) ;
-//    lab.backgroundColor = [UIColor colorWithRed:R / 255.0 green:G / 255.0 blue:B / 255.0 alpha:1];
-////    lab.text = _baseProductsData[indexPath.item];
-//    lab.frame = CGRectMake(0, 0, self.view.frame.size.width - 20, 140);
-//    [cell.contentView addSubview:lab];
+    //    UIImage *window = _baseProductsData[indexPath.item];
+    //    UIImageView *image = [[UIImageView alloc]initWithImage:((NSDictionary *)_baseProductsData[indexPath.item])[@"image"]];
+    //    image.frame = CGRectMake(0, 0, KWidth - 20, KHeight - 100);
+    //    [cell.contentView addSubview:image];
+    //    UILabel *lab = [[UILabel alloc]init];
+    //    int R = (arc4random() % 256) ;
+    //    int G = (arc4random() % 256) ;
+    //    int B = (arc4random() % 256) ;
+    //    lab.backgroundColor = [UIColor colorWithRed:R / 255.0 green:G / 255.0 blue:B / 255.0 alpha:1];
+    ////    lab.text = _baseProductsData[indexPath.item];
+    //    lab.frame = CGRectMake(0, 0, self.view.frame.size.width - 20, 140);
+    //    [cell.contentView addSubview:lab];
     return cell;
 }
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    [self.navigationController popViewControllerAnimated:YES];
-
-//    if (indexPath.item < [UIApplication sharedApplication].windows.count) {
-//        if (self.nextWindow) {
-//            [self.nextWindow removeFromSuperview];
-//        }
-//        self.nextWindow = _baseProductsData[indexPath.item][@"window"];
-//        UINavigationController *nav = (UINavigationController *)self.nextWindow.rootViewController;
-//        if (self.nextWindow && self.nextWindow.class == [UIWindow class]) {
+    //    [self.navigationController popViewControllerAnimated:YES];
+    
+    //    if (indexPath.item < [UIApplication sharedApplication].windows.count) {
+    //        if (self.nextWindow) {
+    //            [self.nextWindow removeFromSuperview];
+    //        }
+    //        self.nextWindow = _baseProductsData[indexPath.item][@"window"];
+    //        UINavigationController *nav = (UINavigationController *)self.nextWindow.rootViewController;
+    //        if (self.nextWindow && self.nextWindow.class == [UIWindow class]) {
     [self.navigationController popViewControllerAnimated:YES];
+    NSLog(@"现有---window === %@,nav == %@",[UIApplication sharedApplication].keyWindow,[[UIApplication sharedApplication].keyWindow rootViewController]);
     [[UIApplication sharedApplication].keyWindow resignKeyWindow];
     
     SWMultiWindowModel *multiWindow = _baseProductsData[indexPath.item];
     [multiWindow.window makeKeyAndVisible];
-//            NSLog(@"item == %ld",(long)indexPath.item);
-//            NSLog(@"111 === windwow == %@,rootVc == %@,title == %@",self.nextWindow,self.nextWindow.rootViewController,nav.visibleViewController);
-//        }
-//    }
+    NSLog(@"点击---window === %@,nav == %@",multiWindow.window,[multiWindow.window rootViewController]);
+    NSLog(@"点击后---window === %@,nav == %@",[UIApplication sharedApplication].keyWindow,[[UIApplication sharedApplication].keyWindow rootViewController]);
+    //            NSLog(@"item == %ld",(long)indexPath.item);
+    //            NSLog(@"111 === windwow == %@,rootVc == %@,title == %@",self.nextWindow,self.nextWindow.rootViewController,nav.visibleViewController);
+    //        }
+    //    }
+}
+- (void)dealloc{
+    NSLog(@"SWRootViewController被销毁");
 }
 @end

@@ -19,6 +19,17 @@
     /// 背景图
     UIImageView *_imageView;
 }
+
+/**
+ * 快速创建cell
+ @param collectionView <#collectionView description#>
+ @param indexPath <#indexPath description#>
+ @return <#return value description#>
+ */
++ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath{
+    SWMultiWindowCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([self class]) forIndexPath:indexPath];
+    return cell;
+}
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -35,6 +46,7 @@
 - (void)createSubViews{
     _deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_deleteBtn setImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
+    [_deleteBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     
     _titleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_titleBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -85,5 +97,8 @@
     
     self.layer.cornerRadius = 6;
     self.layer.masksToBounds = YES;
+}
+- (void)btnClick:(UIButton *)sender{
+    [self.multiWindow.window removeFromSuperview];
 }
 @end

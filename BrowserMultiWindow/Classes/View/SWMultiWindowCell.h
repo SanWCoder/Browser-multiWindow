@@ -11,5 +11,11 @@
 @interface SWMultiWindowCell : UICollectionViewCell
 /** 数据源 **/
 @property (nonatomic,strong) SWMultiWindowModel *multiWindow;
-
+/**
+ * 快速创建cell
+ @param collectionView <#collectionView description#>
+ @param indexPath <#indexPath description#>
+ @return <#return value description#>
+ */
++ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath;
 @end

@@ -168,4 +168,7 @@
     html.str = @"https://www.baidu.com/";
     [self.navigationController pushViewController:html animated:YES];
 }
+- (void)dealloc{
+    NSLog(@"SWRootViewController被销毁");
+}
 @end
