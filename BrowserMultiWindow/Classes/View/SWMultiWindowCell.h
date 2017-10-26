@@ -12,6 +12,10 @@
 /** 数据源 **/
 @property (nonatomic,strong) SWMultiWindowModel *multiWindow;
 /**
+ * 点击回调
+ */
+@property (nonatomic,copy)void(^MultiWindowBlcok)(UIButton *sender,SWMultiWindowModel *multiWindow);
+/**
  * 快速创建cell
  @param collectionView <#collectionView description#>
  @param indexPath <#indexPath description#>

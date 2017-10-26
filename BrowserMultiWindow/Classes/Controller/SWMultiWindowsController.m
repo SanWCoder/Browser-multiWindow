@@ -17,12 +17,15 @@
 @property (nonatomic,strong) NSMutableArray *baseProductsData;
 /// collectView
 @property (nonatomic,weak) UICollectionView *collectView;
-/// 如果需要创建新窗口，新window须做为当前控制器的属性或者成员变量时才能显示
+/// 如果需要创建新窗口，新window须做为当前控制器的属性或者成员变量时才能显示 且为strong强引用
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) UIWindow *nextWindow;
+
 @end
 
 @implementation SWMultiWindowsController
+{
+    SWMultiWindowFlowlayout *_flowOut;
+}
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
@@ -33,8 +36,7 @@
 }
 - (UIImage *)convertViewToImage:(UIView *)view
 {
-    // 第二个参数表示是否非透明。如果需要显示半透明效果，需传NO，否则YES。第三个参数就是屏幕密度了
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.bounds.size.height - kNavHeight),YES,[UIScreen mainScreen].scale);
+UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.bounds.size.height - kNavHeight),YES,[UIScreen mainScreen].scale);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -45,29 +47,21 @@
     if (!_baseProductsData) {
         _baseProductsData = [[NSMutableArray alloc]init];
         for (UIWindow *windwow in [UIApplication sharedApplication].windows) {
-            if (windwow && windwow.class == [UIWindow class]) {
+            if (windwow && !windwow.isHidden && windwow.class == [UIWindow class]) {
                 UINavigationController *nav = (UINavigationController *)windwow.rootViewController;
                 NSLog(@"加载---window === %@,isKey == %d,nav == %@,visibale == %@,top == %@",windwow,windwow.isKeyWindow,nav,nav.visibleViewController,nav.topViewController);
-//                .isKeyWindow ? nav.viewControllers[1].view : nav.visibleViewController ? nav.visibleViewController.view : nav.topViewController.view
                 SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self convertViewToImage:windwow] window:windwow];
                 [_baseProductsData addObject:multiWindow];
             }
-            //                else{
-            //                    [windwow removeFromSuperview];
-            //                }
         }
-        //        for (int i = 0; i < 10; i ++) {
-        //            [_baseProductsData addObject:[NSString stringWithFormat:@"测试数据----%d",i]];
-        //        }
     }
     return _baseProductsData;
 }
 - (UICollectionView *)collectView{
     if (!_collectView) {
-        SWMultiWindowFlowlayout *flowOut = [[SWMultiWindowFlowlayout alloc]init];
-        flowOut.multiWindowCount = self.baseProductsData.count;
-        UICollectionView *collectView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, KWidth, KHeight - kNomalHeight) collectionViewLayout:flowOut];
-        collectView.alwaysBounceVertical = YES;
+        _flowOut = [[SWMultiWindowFlowlayout alloc]init];
+        _flowOut.multiWindowCount = self.baseProductsData.count;
+        UICollectionView *collectView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, KWidth, KHeight - kNomalHeight) collectionViewLayout:_flowOut];
         _collectView = collectView;
         // 注册cell
         [collectView registerClass:[SWMultiWindowCell class] forCellWithReuseIdentifier:NSStringFromClass([SWMultiWindowCell class])];
@@ -121,45 +115,45 @@
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    
+    NSLog(@"numberOfItemsInSection == %@",self.baseProductsData);
     return self.baseProductsData.count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"sizeForItemAtIndexPath == %@",self.baseProductsData);
     return CGSizeMake(KWidth - 20, KHeight - 150);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"cellForItemAtIndexPath == %@",self.baseProductsData);
     SWMultiWindowCell *cell = [SWMultiWindowCell cellWithCollectionView:collectionView indexPath:indexPath];
     cell.multiWindow = _baseProductsData[indexPath.item];
-    
-    //    UIImage *window = _baseProductsData[indexPath.item];
-    //    UIImageView *image = [[UIImageView alloc]initWithImage:((NSDictionary *)_baseProductsData[indexPath.item])[@"image"]];
-    //    image.frame = CGRectMake(0, 0, KWidth - 20, KHeight - 100);
-    //    [cell.contentView addSubview:image];
-    //    UILabel *lab = [[UILabel alloc]init];
-    //    int R = (arc4random() % 256) ;
-    //    int G = (arc4random() % 256) ;
-    //    int B = (arc4random() % 256) ;
-    //    lab.backgroundColor = [UIColor colorWithRed:R / 255.0 green:G / 255.0 blue:B / 255.0 alpha:1];
-    ////    lab.text = _baseProductsData[indexPath.item];
-    //    lab.frame = CGRectMake(0, 0, self.view.frame.size.width - 20, 140);
-    //    [cell.contentView addSubview:lab];
+    NSLog(@"indexPath == %@",indexPath);
+    cell.MultiWindowBlcok = ^(UIButton *sender, SWMultiWindowModel *multiWindow) {
+        [multiWindow.window resignKeyWindow];
+        multiWindow.window.rootViewController = nil;
+        [multiWindow.window removeFromSuperview];
+        multiWindow.window.hidden = YES;
+        multiWindow.window = nil;
+        
+        [_baseProductsData removeObject:multiWindow];
+        __weak typeof(self)weakSelf = self;
+        [weakSelf.collectView performBatchUpdates:^{
+            [weakSelf.collectView deleteItemsAtIndexPaths:@[indexPath]];
+            _flowOut.multiWindowCount = _baseProductsData.count;
+            collectionView.collectionViewLayout = _flowOut;
+            
+        } completion:^(BOOL finished) {
+            [weakSelf.collectView reloadData];
+        }];
+    };
     return cell;
 }
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    //    [self.navigationController popViewControllerAnimated:YES];
-    
-    //    if (indexPath.item < [UIApplication sharedApplication].windows.count) {
-    //        if (self.nextWindow) {
-    //            [self.nextWindow removeFromSuperview];
-    //        }
-    //        self.nextWindow = _baseProductsData[indexPath.item][@"window"];
-    //        UINavigationController *nav = (UINavigationController *)self.nextWindow.rootViewController;
-    //        if (self.nextWindow && self.nextWindow.class == [UIWindow class]) {
+
     [self.navigationController popViewControllerAnimated:YES];
     NSLog(@"现有---window === %@,nav == %@",[UIApplication sharedApplication].keyWindow,[[UIApplication sharedApplication].keyWindow rootViewController]);
     [[UIApplication sharedApplication].keyWindow resignKeyWindow];
@@ -168,10 +162,6 @@
     [multiWindow.window makeKeyAndVisible];
     NSLog(@"点击---window === %@,nav == %@",multiWindow.window,[multiWindow.window rootViewController]);
     NSLog(@"点击后---window === %@,nav == %@",[UIApplication sharedApplication].keyWindow,[[UIApplication sharedApplication].keyWindow rootViewController]);
-    //            NSLog(@"item == %ld",(long)indexPath.item);
-    //            NSLog(@"111 === windwow == %@,rootVc == %@,title == %@",self.nextWindow,self.nextWindow.rootViewController,nav.visibleViewController);
-    //        }
-    //    }
 }
 - (void)dealloc{
     NSLog(@"SWRootViewController被销毁");

@@ -10,6 +10,6 @@
 
 @interface SWMultiWindowFlowlayout : UICollectionViewFlowLayout
 /// 数据
-@property (nonatomic,assign) NSInteger multiWindowCount;
+@property (nonatomic,assign) NSUInteger multiWindowCount;
 
 @end

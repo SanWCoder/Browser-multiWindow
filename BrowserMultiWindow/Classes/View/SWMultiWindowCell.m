@@ -35,6 +35,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self createSubViews];
+        UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+        [self addGestureRecognizer:recognizer];
         self.backgroundColor = [UIColor whiteColor];
     }
     return self;
@@ -98,7 +100,21 @@
     self.layer.cornerRadius = 6;
     self.layer.masksToBounds = YES;
 }
+- (void)handleSwipeFrom:(UIPanGestureRecognizer *)recognizer{
+//    CGPoint translation = [recognizer translationInView:self];
+//    [recognizer setCancelsTouchesInView:translation.y != 0 ? YES : NO];
+//    CGPoint velocity = [recognizer velocityInView:self];
+//    NSLog(@"translation == %@,velocity == %@",NSStringFromCGPoint(translation),NSStringFromCGPoint(velocity));
+//    recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
+//                                  recognizer.view.center.y);
+//    [recognizer setTranslation:CGPointZero inView:self];
+//    if (fabs(velocity.x) > 4000 && self.MultiWindowBlcok) {
+//        self.MultiWindowBlcok(nil, self.multiWindow);
+//    }
+}
 - (void)btnClick:(UIButton *)sender{
-    [self.multiWindow.window removeFromSuperview];
+    if (self.MultiWindowBlcok) {
+        self.MultiWindowBlcok(sender, self.multiWindow);
+    }
 }
 @end

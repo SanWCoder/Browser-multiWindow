@@ -10,8 +10,9 @@
 
 @implementation SWMultiWindowModel
 - (instancetype)initWithImage:(UIImage *)image window:(UIWindow *)window{
-    self.image = image;
-    self.window = window;
-    return self;
+    SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]init];
+    multiWindow.image = image;
+    multiWindow.window = window;
+    return multiWindow;
 }
 @end

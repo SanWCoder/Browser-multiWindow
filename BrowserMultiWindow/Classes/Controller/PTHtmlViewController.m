@@ -12,6 +12,7 @@
 #import "SWOprateView.h"
 #import "AppDelegate.h"
 #import "SWMultiWindowsController.h"
+#import <WebKit/WebKit.h>
 @interface PTHtmlViewController ()<UIWebViewDelegate>
 
 @property(nonatomic,strong)UIWebView * webView;
@@ -51,7 +52,6 @@
         PTRemindView *remidView = [[PTRemindView alloc]initWithFrame:CGRectMake(0,0, KWidth, KHeight)];
         self.remidView = remidView;
         [self.view addSubview:remidView];
-        
         remidView.hidden = YES;
         remidView.remindData = @[@"no_network",@"呀、好像没网了！",@0];
         remidView.RefreshBlock = ^(PTRemindView *remindView){
@@ -106,7 +106,6 @@
                 [self.navigationController popToRootViewControllerAnimated:YES];
             }
             break;
-
         case 2:
             if (self.webView.canGoForward) {
                 [self.webView goForward];
@@ -130,6 +129,7 @@
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+    
 // self.remidView.hidden = NO;
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
