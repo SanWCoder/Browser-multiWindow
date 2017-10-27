@@ -23,6 +23,7 @@
 		2D7E8AD11F8F487100070A09 /* SWOprateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8AD01F8F487100070A09 /* SWOprateView.m */; };
 		2D7E8ADD1F9092BB00070A09 /* PTHtmlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8ADC1F9092BB00070A09 /* PTHtmlViewController.m */; };
 		2D7E8AE01F9092E000070A09 /* PTRemindView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8ADF1F9092DF00070A09 /* PTRemindView.m */; };
+		2DEF32191FA2E75800C60BF2 /* SWNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DEF32181FA2E75800C60BF2 /* SWNavigationController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,8 @@
 		2D7E8ADC1F9092BB00070A09 /* PTHtmlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTHtmlViewController.m; sourceTree = "<group>"; };
 		2D7E8ADE1F9092DF00070A09 /* PTRemindView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTRemindView.h; sourceTree = "<group>"; };
 		2D7E8ADF1F9092DF00070A09 /* PTRemindView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTRemindView.m; sourceTree = "<group>"; };
+		2DEF32171FA2E75800C60BF2 /* SWNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWNavigationController.h; sourceTree = "<group>"; };
+		2DEF32181FA2E75800C60BF2 /* SWNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWNavigationController.m; sourceTree = "<group>"; };
 		4755CE763F0B88C08BF5C8AC /* Pods-BrowserMultiWindow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrowserMultiWindow.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BrowserMultiWindow/Pods-BrowserMultiWindow.debug.xcconfig"; sourceTree = "<group>"; };
 		9D132E3BCD42C15C52D90BE3 /* libPods-BrowserMultiWindow.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrowserMultiWindow.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -205,6 +208,8 @@
 				2D7E8ACD1F8F47EE00070A09 /* SWRootViewController.m */,
 				2D1BAC471F90C03D0030C9AF /* SWMultiWindowsController.h */,
 				2D1BAC481F90C03D0030C9AF /* SWMultiWindowsController.m */,
+				2DEF32171FA2E75800C60BF2 /* SWNavigationController.h */,
+				2DEF32181FA2E75800C60BF2 /* SWNavigationController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -446,6 +451,7 @@
 				2D7E8ACE1F8F47EE00070A09 /* SWRootViewController.m in Sources */,
 				2D4E22371F985348007B27C9 /* SWMultiWindowFlowlayout.m in Sources */,
 				2D4E22341F973220007B27C9 /* SWMultiWindowModel.m in Sources */,
+				2DEF32191FA2E75800C60BF2 /* SWNavigationController.m in Sources */,
 				2D7E8AE01F9092E000070A09 /* PTRemindView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

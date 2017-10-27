@@ -93,15 +93,8 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
         case 1:
         {
             [self.navigationController popViewControllerAnimated:YES];
-            if (self.window) {
-                [self.window removeFromSuperview];
-            }
-            [[UIApplication sharedApplication].keyWindow resignKeyWindow];
-            self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
-            self.window.backgroundColor = [UIColor redColor];
-            self.window.windowLevel = UIWindowLevelStatusBar;
-            self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
-            [self.window makeKeyAndVisible];
+            // 创建新window
+            [self createWindow];
         }
             break;
         case 2:
@@ -132,6 +125,10 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
     cell.multiWindow = _baseProductsData[indexPath.item];
     NSLog(@"indexPath == %@",indexPath);
     cell.MultiWindowBlcok = ^(UIButton *sender, SWMultiWindowModel *multiWindow) {
+        /// 当删除的为最后一个window时先创建新window再删除
+        if (_baseProductsData.count < 2) {
+            [self createWindow];
+        }
         [multiWindow.window resignKeyWindow];
         multiWindow.window.rootViewController = nil;
         [multiWindow.window removeFromSuperview];
@@ -165,5 +162,19 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
 }
 - (void)dealloc{
     NSLog(@"SWRootViewController被销毁");
+}
+/**
+ * 创建新window
+ */
+- (void)createWindow{
+    if (self.window) {
+        [self.window removeFromSuperview];
+    }
+    [[UIApplication sharedApplication].keyWindow resignKeyWindow];
+    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor redColor];
+    self.window.windowLevel = UIWindowLevelStatusBar;
+    self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
+    [self.window makeKeyAndVisible];
 }
 @end

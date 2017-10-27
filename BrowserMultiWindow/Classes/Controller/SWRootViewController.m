@@ -23,6 +23,7 @@
  * 数据源
  */
 @property (nonatomic,strong) NSMutableArray *homeData;
+@property (nonatomic,strong) PTHtmlViewController *html;
 @end
 
 @implementation SWRootViewController
@@ -48,6 +49,8 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.html = [[PTHtmlViewController alloc]init];
+    [((SWNavigationController *)self.navigationController).openedViewControllers addObject:self];
     // Do any additional setup after loading the view.
     self.title = @"BrowserMultiWindow";
     self.view.backgroundColor = [UIColor darkGrayColor];
@@ -76,7 +79,7 @@
     self.tableView = tableView;
     tableView.delegate = self;
     tableView.dataSource = self;
-//    tableView.backgroundColor = kBacColor;
+    //    tableView.backgroundColor = kBacColor;
     [self.view addSubview:tableView];
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0, *)) {
@@ -87,60 +90,43 @@
     tableView.showsVerticalScrollIndicator = NO;
     
     SWOprateView *oprateView = [[SWOprateView alloc]initWithFrame:CGRectMake(0, KHeight - kNomalHeight, KWidth, kNomalHeight)];
-    
     oprateView.dataArray = @[@"top",@"down",@"more",@"windows",@"homePage"];
     oprateView.OprateBlock = ^(UIButton *sender) {
         kWeakSelf(weakSelf)
         [weakSelf oprateClick:sender];
     };
     [self.view addSubview:oprateView];
-//    [self createSuspendButton];
-}
-- (void)createSuspendButton
-{
-    _button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_button setTitle:@"悬浮按钮" forState:UIControlStateNormal];
-    _button.frame = CGRectMake(0, 0, 80, 80);
-    [_button addTarget:self action:@selector(closeWindow) forControlEvents:UIControlEventTouchUpInside];
-    
-    _window = [[UIWindow alloc]initWithFrame:CGRectMake(100, 200, 80, 80)];
-    _window.windowLevel = UIWindowLevelAlert + 1;
-    _window.backgroundColor = [UIColor redColor];
-    _window.layer.cornerRadius = 40;
-    _window.layer.masksToBounds = YES;
-    [_window addSubview:_button];
-    [_window makeKeyAndVisible];//关键语句,显示window
-}
-/**
- * 按钮的点击方法
- @param sender <#sender description#>
- */
-- (void)btnClick:(UIButton *)sender{
-    
 }
 /**
  * 按钮的操作
  @param sender <#sender description#>
  */
 - (void)oprateClick:(UIButton *)sender{
+    
     switch (sender.tag) {
         case 1:
-            
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
             break;
         case 2:
-            
+        {
+            NSUInteger index = [self.navigationController.viewControllers indexOfObject:self];
+            if (index < ((SWNavigationController *)self.navigationController).openedViewControllers.count - 1) {
+                [self.navigationController pushViewController:((SWNavigationController *)self.navigationController).openedViewControllers[index + 1] animated:YES];
+            }
+        }
             break;
         case 3:
             
             break;
         case 4:
         {
-            SWMultiWindowsController *vc = [[SWMultiWindowsController alloc]init];
-            [self.navigationController pushViewController:vc animated:YES];
+            [self.navigationController pushViewController:self.html animated:YES];
         }
             break;
         case 5:
-            [self.navigationController popToRootViewControllerAnimated:YES];
+            
             break;
         default:
             break;
@@ -164,7 +150,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
-   // html.str = @"http://www.hunliji.com/";
+    // html.str = @"http://www.hunliji.com/";
     html.str = @"https://www.baidu.com/";
     [self.navigationController pushViewController:html animated:YES];
 }

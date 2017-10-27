@@ -12,10 +12,13 @@
 #import "SWOprateView.h"
 #import "AppDelegate.h"
 #import "SWMultiWindowsController.h"
+#import "SWRootViewController.h"
 #import <WebKit/WebKit.h>
 @interface PTHtmlViewController ()<UIWebViewDelegate>
 
 @property(nonatomic,strong)UIWebView * webView;
+
+@property (nonatomic,strong) SWRootViewController *rootVC;
 
 // 提示试图
 @property (nonatomic,weak) PTRemindView *remidView;
@@ -25,10 +28,12 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:animated];}
+    self.navigationController.navigationBarHidden = YES;
+    
+}
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    self.navigationController.navigationBarHidden = YES;
 }
 - (UIWebView *)webView
 {
@@ -67,6 +72,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.rootVC = [[SWRootViewController alloc]init];
+    [((SWNavigationController *)self.navigationController).openedViewControllers addObject:self];
     // iOS 11以后，设置不自动偏移使用（scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever）
     if (@available(*,iOS 11.0)) {
         self.automaticallyAdjustsScrollViewInsets = NO;
@@ -103,12 +110,17 @@
                 [self.webView goBack];
             }
             else{
-                [self.navigationController popToRootViewControllerAnimated:YES];
+                [self.navigationController popViewControllerAnimated:YES];
             }
             break;
         case 2:
             if (self.webView.canGoForward) {
                 [self.webView goForward];
+            }else{
+                NSUInteger index = [self.navigationController.viewControllers indexOfObject:self];
+                if (index < ((SWNavigationController *)self.navigationController).openedViewControllers.count - 1) {
+                    [self.navigationController pushViewController:((SWNavigationController *)self.navigationController).openedViewControllers[index + 1] animated:YES];
+                }
             }
             break;
         case 3:
@@ -121,7 +133,9 @@
         }
             break;
         case 5:
-            [self.navigationController popToRootViewControllerAnimated:YES];
+        {
+            [self.navigationController pushViewController:self.rootVC animated:YES];
+        }
             break;
         default:
             break;
@@ -130,19 +144,19 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     
-// self.remidView.hidden = NO;
+    // self.remidView.hidden = NO;
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
-//    if (_remidView) {
-//        _remidView.hidden = YES;
-//    }
+    //    if (_remidView) {
+    //        _remidView.hidden = YES;
+    //    }
 }
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
-//        PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
-//        html.str = request.URL.absoluteString;
-//        [self.navigationController pushViewController:html animated:YES];
+        //        PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
+        //        html.str = request.URL.absoluteString;
+        //        [self.navigationController pushViewController:html animated:YES];
     }
     return YES;
 }
