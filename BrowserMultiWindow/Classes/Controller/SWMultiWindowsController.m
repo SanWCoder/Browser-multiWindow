@@ -12,6 +12,8 @@
 #import "SWRootViewController.h"
 #import "SWMultiWindowCell.h"
 #import "SWMultiWindowFlowlayout.h"
+#import "SWNavigationController.h"
+#import "PTHtmlViewController.h"
 @interface SWMultiWindowsController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>
 /// 数据源
 @property (nonatomic,strong) NSMutableArray *baseProductsData;
@@ -50,7 +52,17 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
             if (windwow && !windwow.isHidden && windwow.class == [UIWindow class]) {
                 UINavigationController *nav = (UINavigationController *)windwow.rootViewController;
                 NSLog(@"加载---window === %@,isKey == %d,nav == %@,visibale == %@,top == %@",windwow,windwow.isKeyWindow,nav,nav.visibleViewController,nav.topViewController);
-                SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self convertViewToImage:windwow] window:windwow];
+                UIViewController *vc = windwow.isKeyWindow ? nav.viewControllers[nav.viewControllers.count - 2] : nav.visibleViewController ? nav.visibleViewController :nav.topViewController;
+                NSString *title = @"首页";
+                NSString *icon = @"net";
+                if ([vc isKindOfClass:[SWRootViewController class]]) {
+                    title = @"首页";
+                }
+                else if([vc isKindOfClass:[PTHtmlViewController class]]){
+                    title = ((PTHtmlViewController *)vc).webTitle;
+                    icon = [[((PTHtmlViewController *)vc).webView.request.URL.absoluteString componentsSeparatedByString:@"com"].firstObject stringByAppendingString:@"com/favicon.ico"];
+                }
+                SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self convertViewToImage:windwow] title:title icon:icon window:windwow];
                 [_baseProductsData addObject:multiWindow];
             }
         }
@@ -62,6 +74,7 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
         _flowOut = [[SWMultiWindowFlowlayout alloc]init];
         _flowOut.multiWindowCount = self.baseProductsData.count;
         UICollectionView *collectView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, KWidth, KHeight - kNomalHeight) collectionViewLayout:_flowOut];
+        collectView.alwaysBounceVertical = YES;
         _collectView = collectView;
         // 注册cell
         [collectView registerClass:[SWMultiWindowCell class] forCellWithReuseIdentifier:NSStringFromClass([SWMultiWindowCell class])];
@@ -130,6 +143,9 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
             [self createWindow];
         }
         [multiWindow.window resignKeyWindow];
+        ((SWNavigationController *)(multiWindow.window.rootViewController)).openedViewControllers = nil;
+        ((SWNavigationController *)(multiWindow.window.rootViewController)).viewControllers = [[NSArray alloc]init];
+
         multiWindow.window.rootViewController = nil;
         [multiWindow.window removeFromSuperview];
         multiWindow.window.hidden = YES;
@@ -174,7 +190,7 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor redColor];
     self.window.windowLevel = UIWindowLevelStatusBar;
-    self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
+    self.window.rootViewController = [[SWNavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
     [self.window makeKeyAndVisible];
 }
 @end

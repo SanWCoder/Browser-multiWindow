@@ -9,9 +9,11 @@
 #import "SWMultiWindowModel.h"
 
 @implementation SWMultiWindowModel
-- (instancetype)initWithImage:(UIImage *)image window:(UIWindow *)window{
+- (instancetype)initWithImage:(UIImage *)image title:(NSString *)title icon: (NSString *)icon window:(UIWindow *)window{
     SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]init];
     multiWindow.image = image;
+    multiWindow.title = title;
+    multiWindow.icon = icon;
     multiWindow.window = window;
     return multiWindow;
 }

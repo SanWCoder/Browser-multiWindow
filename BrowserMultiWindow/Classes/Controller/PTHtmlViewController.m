@@ -16,7 +16,7 @@
 #import <WebKit/WebKit.h>
 @interface PTHtmlViewController ()<UIWebViewDelegate>
 
-@property(nonatomic,strong)UIWebView * webView;
+
 
 @property (nonatomic,strong) SWRootViewController *rootVC;
 
@@ -150,6 +150,7 @@
     //    if (_remidView) {
     //        _remidView.hidden = YES;
     //    }
+   self.webTitle = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 }
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
@@ -160,6 +161,7 @@
     }
     return YES;
 }
+
 /**
  * 点击手势操作方法
  */

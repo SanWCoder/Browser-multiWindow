@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '6338B91474E30A481FA5E99D8A92717A'
+               BlueprintIdentifier = '2F892FB526DE34B92813B7ED6C471F3B'
                BlueprintName = 'Pods-BrowserMultiWindow'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libPods-BrowserMultiWindow.a'>

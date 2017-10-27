@@ -8,6 +8,7 @@
 
 #import "SWMultiWindowCell.h"
 #import <SDAutoLayout.h>
+#import "UIButton+WebCache.h"
 @implementation SWMultiWindowCell
 {
     /// 标题
@@ -35,8 +36,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self createSubViews];
-        UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
-        [self addGestureRecognizer:recognizer];
+//        UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+//        [self addGestureRecognizer:recognizer];
         self.backgroundColor = [UIColor whiteColor];
     }
     return self;
@@ -69,22 +70,27 @@
 }
 // 赋值
 - (void)addData{
-    [_titleBtn setTitle:@"首页" forState:UIControlStateNormal];
+    [_titleBtn setTitle:self.multiWindow.title.length ? self.multiWindow.title : @"首页" forState:UIControlStateNormal];
+    [_titleBtn sd_setImageWithURL:[NSURL URLWithString:self.multiWindow.icon] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"net"]];
+    _titleBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     _imageView.image = self.multiWindow.image;
 }
 // 布局
 - (void)addLayout{
-    _titleBtn.sd_layout
-    .topSpaceToView(self, 0)
-    .leftSpaceToView(self, 0)
-    .widthIs(60)
-    .heightIs(40);
-    
     _deleteBtn.sd_layout
     .topSpaceToView(self, 0)
     .rightSpaceToView(self, 0)
     .widthIs(60)
     .heightIs(40);
+    
+    _titleBtn.sd_layout
+    .topSpaceToView(self, 0)
+    .leftSpaceToView(self, 0)
+    .rightSpaceToView(_deleteBtn, 30)
+    .heightIs(40);
+    _titleBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    _titleBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+
     _lineView.sd_layout
     .leftSpaceToView(self, 0)
     .rightSpaceToView(self, 0)

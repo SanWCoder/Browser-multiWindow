@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface PTHtmlViewController : UIViewController
+@property(nonatomic,strong)UIWebView * webView;
 // 链接
 @property(nonatomic,copy)NSString *str;
-
-// 导航栏中间文字
-@property(nonatomic,copy)NSString *titleStr;
+// 标题
+@property(nonatomic,copy)NSString *webTitle;
 
 @end
