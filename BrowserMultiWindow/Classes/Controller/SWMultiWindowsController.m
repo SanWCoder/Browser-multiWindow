@@ -145,7 +145,6 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
         [multiWindow.window resignKeyWindow];
         ((SWNavigationController *)(multiWindow.window.rootViewController)).openedViewControllers = nil;
         ((SWNavigationController *)(multiWindow.window.rootViewController)).viewControllers = [[NSArray alloc]init];
-
         multiWindow.window.rootViewController = nil;
         [multiWindow.window removeFromSuperview];
         multiWindow.window.hidden = YES;
