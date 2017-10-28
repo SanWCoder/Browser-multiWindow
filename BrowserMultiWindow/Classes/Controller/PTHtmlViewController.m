@@ -13,8 +13,8 @@
 #import "AppDelegate.h"
 #import "SWMultiWindowsController.h"
 #import "SWRootViewController.h"
-#import <WebKit/WebKit.h>
-@interface PTHtmlViewController ()<UIWebViewDelegate>
+
+@interface PTHtmlViewController ()<UIWebViewDelegate,WKNavigationDelegate,WKUIDelegate>
 
 
 
@@ -35,12 +35,14 @@
     [super viewWillDisappear:animated];
     self.navigationController.navigationBarHidden = YES;
 }
-- (UIWebView *)webView
+- (WKWebView *)webView
 {
     if (!_webView) {
-        _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, KWidth, KHeight  - kNomalHeight)];
-        _webView.delegate = self;
-        _webView.dataDetectorTypes = UIDataDetectorTypeAll;
+        _webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, KWidth, KHeight  - kNomalHeight)];
+//        _webView.delegate = self;
+//        _webView.dataDetectorTypes = UIDataDetectorTypeAll;
+        _webView.navigationDelegate = self;
+        _webView.UIDelegate = self;
         // iOS 11以后，设置不自动偏移使用（self.automaticallyAdjustsScrollViewInsets = NO;）
         if (@available(iOS 11.0, *)) {
             _webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

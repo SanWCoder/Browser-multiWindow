@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
 @interface PTHtmlViewController : UIViewController
-@property(nonatomic,strong)UIWebView * webView;
+@property(nonatomic,strong)WKWebView * webView;
 // 链接
 @property(nonatomic,copy)NSString *str;
 // 标题

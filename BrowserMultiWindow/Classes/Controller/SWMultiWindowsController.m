@@ -60,7 +60,7 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
                 }
                 else if([vc isKindOfClass:[PTHtmlViewController class]]){
                     title = ((PTHtmlViewController *)vc).webTitle;
-                    icon = [[((PTHtmlViewController *)vc).webView.request.URL.absoluteString componentsSeparatedByString:@"com"].firstObject stringByAppendingString:@"com/favicon.ico"];
+                    icon = [[((PTHtmlViewController *)vc).webView.URL.absoluteString componentsSeparatedByString:@"com"].firstObject stringByAppendingString:@"com/favicon.ico"];
                 }
                 SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self convertViewToImage:windwow] title:title icon:icon window:windwow];
                 [_baseProductsData addObject:multiWindow];
