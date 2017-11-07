@@ -24,6 +24,8 @@
  */
 @property (nonatomic,strong) NSMutableArray *homeData;
 @property (nonatomic,strong) PTHtmlViewController *html;
+/// 操作视图
+@property (nonatomic,weak) SWOprateView *oprateView;
 @end
 
 @implementation SWRootViewController
@@ -46,6 +48,11 @@
         }
     }
     return _homeData;
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear: animated];
+    /// 更新按钮状态
+    [self.oprateView subViewStatus:self sender:nil];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -90,6 +97,7 @@
     tableView.showsVerticalScrollIndicator = NO;
     
     SWOprateView *oprateView = [[SWOprateView alloc]initWithFrame:CGRectMake(0, KHeight - kNomalHeight, KWidth, kNomalHeight)];
+    self.oprateView = oprateView;
     oprateView.dataArray = @[@"top",@"down",@"more",@"windows",@"homePage"];
     oprateView.OprateBlock = ^(UIButton *sender) {
         kWeakSelf(weakSelf)
@@ -118,11 +126,14 @@
         }
             break;
         case 3:
-            
+        {
+
+        }
             break;
         case 4:
         {
-            [self.navigationController pushViewController:self.html animated:YES];
+            SWMultiWindowsController *vc = [[SWMultiWindowsController alloc]init];
+            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         case 5:

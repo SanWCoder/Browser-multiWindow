@@ -22,6 +22,8 @@
 
 // 提示试图
 @property (nonatomic,weak) PTRemindView *remidView;
+/// 操作视图
+@property (nonatomic,weak) SWOprateView *oprateView;
 @end
 
 @implementation PTHtmlViewController
@@ -29,7 +31,8 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
-    
+    /// 更新按钮状态
+    [self.oprateView subViewStatus:self sender:nil];
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -94,6 +97,7 @@
     [self.view addSubview:self.webView];
     
     SWOprateView *oprateView = [[SWOprateView alloc]initWithFrame:CGRectMake(0, KHeight - kNomalHeight, KWidth, kNomalHeight)];
+    self.oprateView = oprateView;
     oprateView.dataArray = @[@"top",@"down",@"more",@"windows",@"homePage"];
     oprateView.OprateBlock = ^(UIButton *sender) {
         kWeakSelf(weakSelf)
@@ -107,13 +111,12 @@
  */
 - (void)oprateClick:(UIButton *)sender{
     switch (sender.tag) {
-        case 1:
-            if (self.webView.canGoBack) {
-                [self.webView goBack];
-            }
-            else{
-                [self.navigationController popViewControllerAnimated:YES];
-            }
+        case 1:{
+            self.webView.canGoBack ? [self.webView goBack] : [self.navigationController popViewControllerAnimated:YES];
+            /// 更新按钮状态
+            [self.oprateView subViewStatus:self sender:nil];
+        }
+
             break;
         case 2:
             if (self.webView.canGoForward) {
@@ -123,6 +126,8 @@
                 if (index < ((SWNavigationController *)self.navigationController).openedViewControllers.count - 1) {
                     [self.navigationController pushViewController:((SWNavigationController *)self.navigationController).openedViewControllers[index + 1] animated:YES];
                 }
+                /// 更新按钮状态
+                [self.oprateView subViewStatus:self sender:nil];
             }
             break;
         case 3:
@@ -136,34 +141,29 @@
             break;
         case 5:
         {
-            [self.navigationController pushViewController:self.rootVC animated:YES];
+            [self.navigationController pushViewController:[[SWRootViewController alloc]init] animated:YES];
         }
             break;
         default:
             break;
     }
 }
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
+// 页面开始加载时调用
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation{
+    /// 更新按钮状态
+    [self.oprateView subViewStatus:self sender:nil];
+}
+- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation{
     
-    // self.remidView.hidden = NO;
 }
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
-    //    if (_remidView) {
-    //        _remidView.hidden = YES;
-    //    }
-   self.webTitle = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
+    self.webTitle = webView.title;
+//   self.webTitle = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 }
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
-        //        PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
-        //        html.str = request.URL.absoluteString;
-        //        [self.navigationController pushViewController:html animated:YES];
-    }
-    return YES;
-}
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation{
 
+    
+}
 /**
  * 点击手势操作方法
  */

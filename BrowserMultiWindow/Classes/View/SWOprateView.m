@@ -7,7 +7,8 @@
 //
 
 #import "SWOprateView.h"
-
+#import "SWNavigationController.h"
+#import "PTHtmlViewController.h"
 @implementation SWOprateView
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -45,6 +46,28 @@
 - (void)btnClick:(UIButton *)sender{
     if (_OprateBlock) {
         _OprateBlock(sender);
+    }
+}
+/**
+ * 更新按钮状态
+ @param viewController <#viewController description#>
+ */
+- (void)subViewStatus:(UIViewController *)viewController sender:(UIButton *)sedner{
+    if(self.dataArray.count < 3){
+        return;
+    }
+    NSUInteger index = [viewController.navigationController.viewControllers indexOfObject:viewController];
+    NSLog(@"class == %@,NGWebViewControllerView == %@,eque == %d",viewController.class,[PTHtmlViewController class],[viewController isKindOfClass:[PTHtmlViewController class]]);
+    for (UIButton *subView in self.subviews) {
+        if ((index == 0 && subView.tag == 1)) {
+            ([viewController isKindOfClass:[PTHtmlViewController class]] && ((PTHtmlViewController *)viewController).webView.canGoBack) ?[subView setEnabled:YES] : [subView setEnabled:NO];
+        }
+        else if((index == ((SWNavigationController *)viewController.navigationController).openedViewControllers.count - 1) && subView.tag == 2){
+            ([viewController isKindOfClass:[PTHtmlViewController class]] && ((PTHtmlViewController *)viewController).webView.canGoForward) ? [subView setEnabled:YES] : [subView setEnabled:NO];
+        }
+        else{
+            [subView setEnabled:YES];
+        }
     }
 }
 @end

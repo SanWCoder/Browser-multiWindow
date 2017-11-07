@@ -13,4 +13,9 @@
 @property (nonatomic,copy) void(^OprateBlock)(UIButton *sender);
 /// 创建数据
 @property (nonatomic,strong) NSArray *dataArray;
+/**
+ * 更新按钮状态
+ @param viewController <#viewController description#>
+ */
+- (void)subViewStatus:(UIViewController *)viewController sender:(UIButton *)sedner;
 @end
