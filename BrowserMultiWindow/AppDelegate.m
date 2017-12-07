@@ -8,8 +8,10 @@
 
 #import "AppDelegate.h"
 #import "SWRootViewController.h"
+#import "SWWindow.h"
 @interface AppDelegate ()
-
+/// 如果需要创建新窗口，新window须做为当前控制器的属性或者成员变量时才能显示 且为strong强引用
+@property (strong, nonatomic) SWWindow *firstWindow;
 @end
 
 @implementation AppDelegate
@@ -20,7 +22,14 @@
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     
     self.window.rootViewController = [[SWNavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
-    [self.window makeKeyAndVisible];
+    [self.window resignKeyWindow];
+    self.window.hidden = YES;
+    self.window.rootViewController = nil;
+    
+    self.firstWindow = [[SWWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    self.firstWindow.windowLevel = UIWindowLevelNormal;
+    self.firstWindow.rootViewController = [[SWNavigationController alloc]initWithRootViewController:[[SWRootViewController alloc] init]];
+    [self.firstWindow makeKeyAndVisible];
     return YES;
 }
 

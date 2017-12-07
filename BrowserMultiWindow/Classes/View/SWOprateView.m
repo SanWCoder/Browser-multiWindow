@@ -53,19 +53,16 @@
  @param viewController <#viewController description#>
  */
 - (void)subViewStatus:(UIViewController *)viewController sender:(UIButton *)sedner{
-    if(self.dataArray.count < 3){
-        return;
-    }
-    NSUInteger index = [viewController.navigationController.viewControllers indexOfObject:viewController];
-    NSLog(@"class == %@,NGWebViewControllerView == %@,eque == %d",viewController.class,[PTHtmlViewController class],[viewController isKindOfClass:[PTHtmlViewController class]]);
+   
+    SWNavigationController *nav = ((SWNavigationController *)viewController.navigationController);
+    NSUInteger index = nav.currentVisibleIndex;
     for (UIButton *subView in self.subviews) {
-        if ((index == 0 && subView.tag == 1)) {
-            ([viewController isKindOfClass:[PTHtmlViewController class]] && ((PTHtmlViewController *)viewController).webView.canGoBack) ?[subView setEnabled:YES] : [subView setEnabled:NO];
+        if (index <= 1 && subView.tag == 1) {
+            ([viewController isKindOfClass:[PTHtmlViewController class]] && ((PTHtmlViewController *)viewController).webView.canGoBack) ? [subView setEnabled:YES] : [subView setEnabled:NO];
         }
-        else if((index == ((SWNavigationController *)viewController.navigationController).openedViewControllers.count - 1) && subView.tag == 2){
+        else if(index >= nav.openedViewControllers.count && subView.tag == 2){
             ([viewController isKindOfClass:[PTHtmlViewController class]] && ((PTHtmlViewController *)viewController).webView.canGoForward) ? [subView setEnabled:YES] : [subView setEnabled:NO];
-        }
-        else{
+        }else{
             [subView setEnabled:YES];
         }
     }

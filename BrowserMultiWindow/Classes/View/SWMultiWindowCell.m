@@ -36,8 +36,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self createSubViews];
-//        UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
-//        [self addGestureRecognizer:recognizer];
         self.backgroundColor = [UIColor whiteColor];
     }
     return self;
@@ -48,7 +46,7 @@
  */
 - (void)createSubViews{
     _deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_deleteBtn setImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
+    [_deleteBtn setImage:[UIImage imageNamed:@"window_delete"] forState:UIControlStateNormal];
     [_deleteBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     
     _titleBtn = [UIButton buttonWithType:UIButtonTypeCustom];

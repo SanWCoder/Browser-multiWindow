@@ -13,7 +13,7 @@
 #import "AppDelegate.h"
 #import "SWMultiWindowsController.h"
 #import "SWRootViewController.h"
-
+#import "SWMultiWindowViewModel.h"
 @interface PTHtmlViewController ()<UIWebViewDelegate,WKNavigationDelegate,WKUIDelegate>
 
 
@@ -110,38 +110,51 @@
  @param sender <#sender description#>
  */
 - (void)oprateClick:(UIButton *)sender{
+    
     switch (sender.tag) {
-        case 1:{
-            self.webView.canGoBack ? [self.webView goBack] : [self.navigationController popViewControllerAnimated:YES];
+        case 1:
+        {
+            // 返回按钮
+            if (self.webView.canGoBack) {
+                [self.webView goBack];
+                return;
+            }
+            UIViewController *popVc = [SWMultiWindowViewModel popToViewController:self];
+            if(popVc){
+                [self.navigationController popToViewController:popVc animated:YES];
+            }
             /// 更新按钮状态
-            [self.oprateView subViewStatus:self sender:nil];
+            [self.oprateView subViewStatus:self sender:sender];
         }
-
             break;
-        case 2:
+        case 2:// 前进
+        {
             if (self.webView.canGoForward) {
                 [self.webView goForward];
-            }else{
-                NSUInteger index = [self.navigationController.viewControllers indexOfObject:self];
-                if (index < ((SWNavigationController *)self.navigationController).openedViewControllers.count - 1) {
-                    [self.navigationController pushViewController:((SWNavigationController *)self.navigationController).openedViewControllers[index + 1] animated:YES];
-                }
-                /// 更新按钮状态
-                [self.oprateView subViewStatus:self sender:nil];
+                return;
             }
+            UIViewController *pushVc = [SWMultiWindowViewModel pushToViewController:self];
+            if(pushVc){
+                [self.navigationController pushViewController:pushVc animated:YES];
+            }
+            /// 更新按钮状态
+            [self.oprateView subViewStatus:self sender:sender];
+        }
             break;
         case 3:
-            
             break;
-        case 4:
+        case 4:// 多页面
         {
             SWMultiWindowsController *vc = [[SWMultiWindowsController alloc]init];
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;
-        case 5:
+            
+        case 5:// 返回首页
         {
-            [self.navigationController pushViewController:[[SWRootViewController alloc]init] animated:YES];
+            [SWMultiWindowViewModel addNewViewControllerToNavigationController:[[SWRootViewController alloc]init]];
+            /// 交换层级
+            [SWMultiWindowViewModel updateNavigationViewControllers:self];
         }
             break;
         default:
@@ -158,7 +171,6 @@
 }
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
     self.webTitle = webView.title;
-//   self.webTitle = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 }
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation{
 

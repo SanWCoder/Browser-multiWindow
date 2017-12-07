@@ -10,10 +10,10 @@
 #import <WebKit/WebKit.h>
 
 @interface PTHtmlViewController : UIViewController
-@property(nonatomic,strong)WKWebView * webView;
+@property(nonatomic,strong) WKWebView * webView;
 // 链接
-@property(nonatomic,copy)NSString *str;
+@property(nonatomic,copy) NSString *str;
 // 标题
-@property(nonatomic,copy)NSString *webTitle;
+@property(nonatomic,copy) NSString *webTitle;
 
 @end

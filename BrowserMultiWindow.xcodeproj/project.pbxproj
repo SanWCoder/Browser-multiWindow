@@ -11,7 +11,6 @@
 		2D1BAC491F90C03D0030C9AF /* SWMultiWindowsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D1BAC481F90C03D0030C9AF /* SWMultiWindowsController.m */; };
 		2D3A1B971F959BD200C36614 /* SWMultiWindowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3A1B961F959BD200C36614 /* SWMultiWindowCell.m */; };
 		2D4E22341F973220007B27C9 /* SWMultiWindowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E22331F973220007B27C9 /* SWMultiWindowModel.m */; };
-		2D4E22371F985348007B27C9 /* SWMultiWindowFlowlayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D4E22361F985348007B27C9 /* SWMultiWindowFlowlayout.m */; };
 		2D7E8A8E1F8F400A00070A09 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8A8D1F8F400A00070A09 /* AppDelegate.m */; };
 		2D7E8A941F8F400A00070A09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D7E8A921F8F400A00070A09 /* Main.storyboard */; };
 		2D7E8A961F8F400A00070A09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D7E8A951F8F400A00070A09 /* Assets.xcassets */; };
@@ -23,6 +22,9 @@
 		2D7E8AD11F8F487100070A09 /* SWOprateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8AD01F8F487100070A09 /* SWOprateView.m */; };
 		2D7E8ADD1F9092BB00070A09 /* PTHtmlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8ADC1F9092BB00070A09 /* PTHtmlViewController.m */; };
 		2D7E8AE01F9092E000070A09 /* PTRemindView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D7E8ADF1F9092DF00070A09 /* PTRemindView.m */; };
+		2DAC44691FD954CE009BF74D /* SWWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC44681FD954CE009BF74D /* SWWindow.m */; };
+		2DAC446F1FD95981009BF74D /* SWMultiWindowFlowlayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC446E1FD95981009BF74D /* SWMultiWindowFlowlayout.m */; };
+		2DAC44721FD95A9A009BF74D /* SWMultiWindowViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC44711FD95A9A009BF74D /* SWMultiWindowViewModel.m */; };
 		2DEF32191FA2E75800C60BF2 /* SWNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DEF32181FA2E75800C60BF2 /* SWNavigationController.m */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +78,12 @@
 		2D7E8ADC1F9092BB00070A09 /* PTHtmlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTHtmlViewController.m; sourceTree = "<group>"; };
 		2D7E8ADE1F9092DF00070A09 /* PTRemindView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTRemindView.h; sourceTree = "<group>"; };
 		2D7E8ADF1F9092DF00070A09 /* PTRemindView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTRemindView.m; sourceTree = "<group>"; };
+		2DAC44671FD954CE009BF74D /* SWWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWWindow.h; sourceTree = "<group>"; };
+		2DAC44681FD954CE009BF74D /* SWWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWWindow.m; sourceTree = "<group>"; };
+		2DAC446D1FD95981009BF74D /* SWMultiWindowFlowlayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWMultiWindowFlowlayout.h; sourceTree = "<group>"; };
+		2DAC446E1FD95981009BF74D /* SWMultiWindowFlowlayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWMultiWindowFlowlayout.m; sourceTree = "<group>"; };
+		2DAC44701FD95A9A009BF74D /* SWMultiWindowViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWMultiWindowViewModel.h; sourceTree = "<group>"; };
+		2DAC44711FD95A9A009BF74D /* SWMultiWindowViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWMultiWindowViewModel.m; sourceTree = "<group>"; };
 		2DEF32171FA2E75800C60BF2 /* SWNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWNavigationController.h; sourceTree = "<group>"; };
 		2DEF32181FA2E75800C60BF2 /* SWNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWNavigationController.m; sourceTree = "<group>"; };
 		4755CE763F0B88C08BF5C8AC /* Pods-BrowserMultiWindow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrowserMultiWindow.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BrowserMultiWindow/Pods-BrowserMultiWindow.debug.xcconfig"; sourceTree = "<group>"; };
@@ -202,6 +210,8 @@
 		2D7E8AC61F8F474E00070A09 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2DAC446D1FD95981009BF74D /* SWMultiWindowFlowlayout.h */,
+				2DAC446E1FD95981009BF74D /* SWMultiWindowFlowlayout.m */,
 				2D7E8ADB1F9092BA00070A09 /* PTHtmlViewController.h */,
 				2D7E8ADC1F9092BB00070A09 /* PTHtmlViewController.m */,
 				2D7E8ACC1F8F47EE00070A09 /* SWRootViewController.h */,
@@ -223,6 +233,8 @@
 				2D7E8AD01F8F487100070A09 /* SWOprateView.m */,
 				2D3A1B951F959BD200C36614 /* SWMultiWindowCell.h */,
 				2D3A1B961F959BD200C36614 /* SWMultiWindowCell.m */,
+				2DAC44671FD954CE009BF74D /* SWWindow.h */,
+				2DAC44681FD954CE009BF74D /* SWWindow.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -230,6 +242,8 @@
 		2D7E8ACA1F8F474E00070A09 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				2DAC44701FD95A9A009BF74D /* SWMultiWindowViewModel.h */,
+				2DAC44711FD95A9A009BF74D /* SWMultiWindowViewModel.m */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -445,14 +459,16 @@
 				2D1BAC491F90C03D0030C9AF /* SWMultiWindowsController.m in Sources */,
 				2D7E8A9C1F8F400A00070A09 /* main.m in Sources */,
 				2D7E8AD11F8F487100070A09 /* SWOprateView.m in Sources */,
+				2DAC44721FD95A9A009BF74D /* SWMultiWindowViewModel.m in Sources */,
 				2D3A1B971F959BD200C36614 /* SWMultiWindowCell.m in Sources */,
+				2DAC44691FD954CE009BF74D /* SWWindow.m in Sources */,
 				2D7E8ADD1F9092BB00070A09 /* PTHtmlViewController.m in Sources */,
 				2D7E8A8E1F8F400A00070A09 /* AppDelegate.m in Sources */,
 				2D7E8ACE1F8F47EE00070A09 /* SWRootViewController.m in Sources */,
-				2D4E22371F985348007B27C9 /* SWMultiWindowFlowlayout.m in Sources */,
 				2D4E22341F973220007B27C9 /* SWMultiWindowModel.m in Sources */,
 				2DEF32191FA2E75800C60BF2 /* SWNavigationController.m in Sources */,
 				2D7E8AE01F9092E000070A09 /* PTRemindView.m in Sources */,
+				2DAC446F1FD95981009BF74D /* SWMultiWindowFlowlayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

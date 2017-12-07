@@ -12,9 +12,8 @@
 #import "SWConfig.h"
 #import "PTHtmlViewController.h"
 #import "SWMultiWindowsController.h"
-@interface SWRootViewController ()<UIGestureRecognizerDelegate,UIWebViewDelegate,UINavigationControllerDelegate,UITableViewDataSource,UITableViewDelegate>
-
-@property (nonatomic,weak) UIWebView *webView;
+#import "SWMultiWindowViewModel.h"
+@interface SWRootViewController ()<UIGestureRecognizerDelegate,UITableViewDataSource,UITableViewDelegate>
 /**
  *  tableView
  */
@@ -51,13 +50,19 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear: animated];
+    self.navigationController.navigationBarHidden = YES;
     /// 更新按钮状态
     [self.oprateView subViewStatus:self sender:nil];
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBarHidden = NO;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.html = [[PTHtmlViewController alloc]init];
-    [((SWNavigationController *)self.navigationController).openedViewControllers addObject:self];
+    /// 添加进已打开的控制器
+    [SWMultiWindowViewModel addNewViewControllerToNavigationController:self];
     // Do any additional setup after loading the view.
     self.title = @"BrowserMultiWindow";
     self.view.backgroundColor = [UIColor darkGrayColor];
@@ -79,10 +84,10 @@
         [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
         btn.tag = i + 1;
         btn.backgroundColor = [UIColor whiteColor];
-        btn.frame = CGRectMake(width * i,kNavHeight, width, height * 2);
+        btn.frame = CGRectMake(width * i,0, width, height * 2);
         [self.view addSubview:btn];
     }
-    UITableView * tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kNavHeight + height * 2, KWidth, KHeight - (kNavHeight + height * 2) - kNomalHeight) style:UITableViewStylePlain]; // UITableViewStyleGrouped会在头上部添加空白大体30左右
+    UITableView * tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, height * 2, KWidth, KHeight - (height * 2) - kNomalHeight) style:UITableViewStylePlain]; // UITableViewStyleGrouped会在头上部添加空白大体30左右
     self.tableView = tableView;
     tableView.delegate = self;
     tableView.dataSource = self;
@@ -114,30 +119,31 @@
     switch (sender.tag) {
         case 1:
         {
-            [self.navigationController popViewControllerAnimated:YES];
+            UIViewController *popVc = [SWMultiWindowViewModel popToViewController:self];
+            if(popVc){
+                [self.navigationController popToViewController:popVc animated:YES];
+            }
         }
             break;
-        case 2:
+        case 2:// 前进
         {
-            NSUInteger index = [self.navigationController.viewControllers indexOfObject:self];
-            if (index < ((SWNavigationController *)self.navigationController).openedViewControllers.count - 1) {
-                [self.navigationController pushViewController:((SWNavigationController *)self.navigationController).openedViewControllers[index + 1] animated:YES];
+            
+            UIViewController *pushVc = [SWMultiWindowViewModel pushToViewController:self];
+            if(pushVc){
+                [self.navigationController pushViewController:pushVc animated:YES];
             }
         }
             break;
         case 3:
-        {
-
-        }
             break;
-        case 4:
+        case 4:// 多页面
         {
             SWMultiWindowsController *vc = [[SWMultiWindowsController alloc]init];
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;
-        case 5:
             
+        case 5:// 返回首页
             break;
         default:
             break;
@@ -161,9 +167,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PTHtmlViewController *html = [[PTHtmlViewController alloc]init];
-    // html.str = @"http://www.hunliji.com/";
     html.str = @"https://www.baidu.com/";
+    /// 如果已经返回到root时再次点击清空以往打开过得VC，避免无限次累加返回后退
+    [SWMultiWindowViewModel resetNavigationSubController:self];
+    /// 添加新控制器
+    [SWMultiWindowViewModel addNewViewControllerToNavigationController:html];
     [self.navigationController pushViewController:html animated:YES];
+}
+- (void)btnClick:(UIButton *)sender{
+    NSLog(@"点击顶部按钮");
 }
 - (void)dealloc{
     NSLog(@"SWRootViewController被销毁");

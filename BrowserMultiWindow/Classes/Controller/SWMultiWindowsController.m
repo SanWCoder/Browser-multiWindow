@@ -1,69 +1,41 @@
 //
 //  SWMultiWindowsController.m
-//  BrowserMultiWindow
+//  Navigation
 //
-//  Created by SanW on 2017/10/13.
+//  Created by SanW on 2017/10/12.
 //  Copyright © 2017年 ONONTeam. All rights reserved.
 //
 
 #import "SWMultiWindowsController.h"
-#import "SWConfig.h"
-#import "SWOprateView.h"
-#import "SWRootViewController.h"
-#import "SWMultiWindowCell.h"
+#import "SWMultiWindowModel.h"
 #import "SWMultiWindowFlowlayout.h"
+#import "SWMultiWindowCell.h"
+#import "SWOprateView.h"
+#import "SWConfig.h"
+#import "SWWindow.h"
+#import "SWRootViewController.h"
 #import "SWNavigationController.h"
 #import "PTHtmlViewController.h"
-@interface SWMultiWindowsController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>
+
+#define kMultiBgColor [UIColor colorWithRed:10.0 / 255.0 green:54.0 / 255.0 blue:69.0 / 255.0 alpha:1]
+@interface SWMultiWindowsController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate,SWMultiWindowFlowlayoutDelegate,UIGestureRecognizerDelegate>
 /// 数据源
 @property (nonatomic,strong) NSMutableArray *baseProductsData;
 /// collectView
 @property (nonatomic,weak) UICollectionView *collectView;
 /// 如果需要创建新窗口，新window须做为当前控制器的属性或者成员变量时才能显示 且为strong强引用
-@property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic)  SWWindow *window;
 
+@property(nonatomic, strong) SWMultiWindowFlowlayout *cardLayout;
 @end
 
 @implementation SWMultiWindowsController
-{
-    SWMultiWindowFlowlayout *_flowOut;
-}
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = YES;
-}
-- (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-    self.navigationController.navigationBarHidden = NO;
-}
-- (UIImage *)convertViewToImage:(UIView *)view
-{
-UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.bounds.size.height - kNavHeight),YES,[UIScreen mainScreen].scale);
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
-}
-- (NSMutableArray *)baseProductsData
-{
+- (NSMutableArray *)baseProductsData{
     if (!_baseProductsData) {
         _baseProductsData = [[NSMutableArray alloc]init];
-        for (UIWindow *windwow in [UIApplication sharedApplication].windows) {
-            if (windwow && !windwow.isHidden && windwow.class == [UIWindow class]) {
-                UINavigationController *nav = (UINavigationController *)windwow.rootViewController;
-                NSLog(@"加载---window === %@,isKey == %d,nav == %@,visibale == %@,top == %@",windwow,windwow.isKeyWindow,nav,nav.visibleViewController,nav.topViewController);
-                UIViewController *vc = windwow.isKeyWindow ? nav.viewControllers[nav.viewControllers.count - 2] : nav.visibleViewController ? nav.visibleViewController :nav.topViewController;
-                NSString *title = @"首页";
-                NSString *icon = @"net";
-                if ([vc isKindOfClass:[SWRootViewController class]]) {
-                    title = @"首页";
-                }
-                else if([vc isKindOfClass:[PTHtmlViewController class]]){
-                    title = ((PTHtmlViewController *)vc).webTitle;
-                    icon = [[((PTHtmlViewController *)vc).webView.URL.absoluteString componentsSeparatedByString:@"com"].firstObject stringByAppendingString:@"com/favicon.ico"];
-                }
-                SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self convertViewToImage:windwow] title:title icon:icon window:windwow];
-                [_baseProductsData addObject:multiWindow];
+        for (UIWindow *window in [UIApplication sharedApplication].windows) {
+            if (window && !window.isHidden && (window.class == [SWWindow class])) {
+                [self addWindow:window];
             }
         }
     }
@@ -71,9 +43,7 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
 }
 - (UICollectionView *)collectView{
     if (!_collectView) {
-        _flowOut = [[SWMultiWindowFlowlayout alloc]init];
-        _flowOut.multiWindowCount = self.baseProductsData.count;
-        UICollectionView *collectView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, KWidth, KHeight - kNomalHeight) collectionViewLayout:_flowOut];
+        UICollectionView *collectView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, KWidth, KHeight - kNomalHeight) collectionViewLayout:self.cardLayout];
         collectView.alwaysBounceVertical = YES;
         _collectView = collectView;
         // 注册cell
@@ -84,18 +54,30 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
     }
     return _collectView;
 }
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBarHidden = NO;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.collectView.backgroundColor = [UIColor grayColor];
-    self.view.backgroundColor = [UIColor grayColor];
+    self.cardLayout = [[SWMultiWindowFlowlayout alloc]initWithOffsetY:150];
+    self.cardLayout.delegate = self;
+    self.collectView.backgroundColor = kMultiBgColor;
+    self.view.backgroundColor = kMultiBgColor;
     SWOprateView *oprateView = [[SWOprateView alloc]initWithFrame:CGRectMake(0, KHeight - kNomalHeight, KWidth, kNomalHeight)];
-    oprateView.dataArray = @[@"add",@"return"];
+    oprateView.dataArray = @[@"window_add",@"window_back"];
     oprateView.OprateBlock = ^(UIButton *sender) {
-        kWeakSelf(weakSelf)
-        [weakSelf oprateClick:sender];
+        [self oprateClick:sender];
     };
+    oprateView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:oprateView];
+    /// 大于10个
+    oprateView.subviews.firstObject.hidden = self.baseProductsData.count >= 10;
 }
 /**
  * 按钮的操作
@@ -121,59 +103,61 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    NSLog(@"numberOfItemsInSection == %@",self.baseProductsData);
     return self.baseProductsData.count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"sizeForItemAtIndexPath == %@",self.baseProductsData);
     return CGSizeMake(KWidth - 20, KHeight - 150);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"cellForItemAtIndexPath == %@",self.baseProductsData);
+    kWeakSelf(weakSelf)
     SWMultiWindowCell *cell = [SWMultiWindowCell cellWithCollectionView:collectionView indexPath:indexPath];
     cell.multiWindow = _baseProductsData[indexPath.item];
-    NSLog(@"indexPath == %@",indexPath);
+//    cell.ReloadItemBlcok = ^(NGMultiWindowModel *multiWindow) {
+//        [weakSelf.collectView reloadItemsAtIndexPaths:@[indexPath]];
+//    };
     cell.MultiWindowBlcok = ^(UIButton *sender, SWMultiWindowModel *multiWindow) {
-        /// 当删除的为最后一个window时先创建新window再删除
+        /// 当删除的为最后一个window时切换rootViewController
         if (_baseProductsData.count < 2) {
-            [self createWindow];
+            [UIApplication sharedApplication].keyWindow. rootViewController = [[SWNavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
+            return;
         }
-        [multiWindow.window resignKeyWindow];
-        ((SWNavigationController *)(multiWindow.window.rootViewController)).openedViewControllers = nil;
-        ((SWNavigationController *)(multiWindow.window.rootViewController)).viewControllers = [[NSArray alloc]init];
-        multiWindow.window.rootViewController = nil;
-        [multiWindow.window removeFromSuperview];
-        multiWindow.window.hidden = YES;
-        multiWindow.window = nil;
-        
+        // 删除window
+        [weakSelf deleteWindow:multiWindow.window];
         [_baseProductsData removeObject:multiWindow];
-        __weak typeof(self)weakSelf = self;
         [weakSelf.collectView performBatchUpdates:^{
             [weakSelf.collectView deleteItemsAtIndexPaths:@[indexPath]];
-            _flowOut.multiWindowCount = _baseProductsData.count;
-            collectionView.collectionViewLayout = _flowOut;
-            
+            collectionView.collectionViewLayout = weakSelf.cardLayout;
         } completion:^(BOOL finished) {
             [weakSelf.collectView reloadData];
         }];
     };
     return cell;
 }
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        CGPoint translatedPoint = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:gestureRecognizer.view];
+        if (fabs(translatedPoint.x) > fabs(translatedPoint.y)) {
+            return YES;
+        }
+    }
+    return NO;
+}
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    [self.navigationController popViewControllerAnimated:YES];
-    NSLog(@"现有---window === %@,nav == %@",[UIApplication sharedApplication].keyWindow,[[UIApplication sharedApplication].keyWindow rootViewController]);
-    [[UIApplication sharedApplication].keyWindow resignKeyWindow];
-    
     SWMultiWindowModel *multiWindow = _baseProductsData[indexPath.item];
+    NSLog(@"现有---window === %@,nav == %@,isKeyWindow == %d",[UIApplication sharedApplication].keyWindow,[[UIApplication sharedApplication].keyWindow rootViewController],[UIApplication sharedApplication].keyWindow.isKeyWindow);
+    [self.navigationController popViewControllerAnimated:NO];
+    if (multiWindow.window.isKeyWindow) {
+        return;
+    }
+    [[UIApplication sharedApplication].keyWindow resignKeyWindow];
+    NSLog(@"点击前---window === %@,nav == %@,isKeyWindow == %d",multiWindow.window,[multiWindow.window rootViewController],multiWindow.window.isKeyWindow);
     [multiWindow.window makeKeyAndVisible];
-    NSLog(@"点击---window === %@,nav == %@",multiWindow.window,[multiWindow.window rootViewController]);
-    NSLog(@"点击后---window === %@,nav == %@",[UIApplication sharedApplication].keyWindow,[[UIApplication sharedApplication].keyWindow rootViewController]);
+    NSLog(@"点击后---window === %@,nav == %@,isKeyWindow == %d",[UIApplication sharedApplication].keyWindow,[[UIApplication sharedApplication].keyWindow rootViewController],[UIApplication sharedApplication].keyWindow.isKeyWindow);
 }
 - (void)dealloc{
     NSLog(@"SWRootViewController被销毁");
@@ -183,13 +167,88 @@ UIGraphicsBeginImageContextWithOptions(CGSizeMake(view.bounds.size.width, view.b
  */
 - (void)createWindow{
     if (self.window) {
-        [self.window removeFromSuperview];
+        [self deleteWindow:self.window];
     }
     [[UIApplication sharedApplication].keyWindow resignKeyWindow];
-    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.backgroundColor = [UIColor redColor];
-    self.window.windowLevel = UIWindowLevelStatusBar;
+    self.window = [[SWWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.windowLevel = UIWindowLevelNormal;
     self.window.rootViewController = [[SWNavigationController alloc]initWithRootViewController:[[SWRootViewController alloc]init]];
+    self.window.hidden = NO;
     [self.window makeKeyAndVisible];
 }
+
+/**
+ * 删除window
+ @param window <#window description#>
+ */
+- (void)deleteWindow:(UIWindow *)window{
+    [((SWNavigationController *)(window.rootViewController)).openedViewControllers removeAllObjects];
+    ((SWNavigationController *)(window.rootViewController)).openedViewControllers = nil;
+    ((SWNavigationController *)(window.rootViewController)).viewControllers = [[NSArray alloc]init];
+    [window.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    window.rootViewController = nil;
+    [window resignKeyWindow];
+    [window removeFromSuperview];
+    window.hidden = YES;
+    window = nil;
+}
+
+/**
+ * 给集合添加一个window
+ @param window <#window description#>
+ */
+- (void)addWindow:(UIWindow *)window{
+    SWNavigationController *nav = (SWNavigationController *)window.rootViewController;
+    if ([nav.openedViewControllers.lastObject isKindOfClass:[SWMultiWindowsController class]]) {
+        [nav.openedViewControllers removeLastObject];
+    }
+    UIViewController *vc = nav.viewControllers.lastObject;
+    if ([vc isKindOfClass:[SWMultiWindowsController class]]) {
+        vc = nav.viewControllers[nav.viewControllers.count - 2];
+    }
+    NSString *title = @"首页";
+    NSString *icon = @"net";
+    if ([vc isKindOfClass:[SWRootViewController class]]) {
+        title = @"首页";
+    }
+    else if([vc isKindOfClass:[PTHtmlViewController class]]){
+        title = ((PTHtmlViewController *)vc).webTitle;
+        icon = [[((PTHtmlViewController *)vc).str componentsSeparatedByString:@"com"].firstObject stringByAppendingString:@"com/favicon.ico"];
+    }
+    SWMultiWindowModel *multiWindow = [[SWMultiWindowModel alloc]initWithImage:[self captureView:vc] title:title icon:icon window:window];
+    [_baseProductsData addObject:multiWindow];
+}
+#pragma mark - 生成图片
+- (UIImage*)captureView:(UIViewController *)viewController
+{
+    UIView *originView = viewController.view;
+        CGRect frame = [viewController isKindOfClass:[PTHtmlViewController class]] ? CGRectMake(0, kNavHeight, originView.frame.size.width, originView.frame.size.height - kNomalHeight  - kNavHeight): CGRectMake(0, 0, originView.frame.size.width, originView.frame.size.height - kNomalHeight);
+    UIGraphicsBeginImageContext(frame.size);
+    UIImage *img;
+    /// *WKWebView截屏只显示背景，因此和其他方式截屏区分开（UIWebVIew正常）
+    UIGraphicsEndImageContext();
+    if([viewController isKindOfClass:[PTHtmlViewController class]]){
+        UIGraphicsBeginImageContextWithOptions(frame.size, NO, 0.0);
+        
+        for(UIView *subview in originView.subviews)
+        {
+            /// 过滤掉底部视图
+            if ([subview isKindOfClass:[WKWebView class]]) {
+                [subview drawViewHierarchyInRect:CGRectMake(0, 0, subview.frame.size.width, subview.frame.size.height) afterScreenUpdates:YES];
+            }
+        }
+        img = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+    else
+    {
+        UIGraphicsBeginImageContextWithOptions(frame.size, NO, 0.0);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        [viewController.view.layer renderInContext:context];
+        img = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+    return img;
+}
 @end
+
